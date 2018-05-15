@@ -12,7 +12,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- */
+*/
 
 package io.mfj.expr
 
@@ -25,43 +25,43 @@ package io.mfj.expr
  * When generating an expression, the first symbol for an op type is preferred.
  */
 enum class ExOpType(vararg val symbols:String) {
-	REGEX_MATCH("=~"),
-	GREATER_EQUAL(">="),
-	LESS_EQUAL("<="),
-	NOT_EQUAL("<>","!="),
-	EQUAL("="),
-	GREATER(">"),
-	LESS("<"),
-	;
+  REGEX_MATCH("=~"),
+  GREATER_EQUAL(">="),
+  LESS_EQUAL("<="),
+  NOT_EQUAL("<>","!="),
+  EQUAL("="),
+  GREATER(">"),
+  LESS("<"),
+  ;
 
-	companion object {
-		private val bySymbol:Map<String,ExOpType> = values()
-				.map { exOpType ->
-						exOpType.symbols.map { symbol ->
-							symbol to exOpType
-						}
-					}
-					.flatten()
-					.toMap() // this keeps order. that is important.
+  companion object {
+    private val bySymbol:Map<String,ExOpType> = values()
+        .map { exOpType ->
+            exOpType.symbols.map { symbol ->
+              symbol to exOpType
+            }
+          }
+          .flatten()
+          .toMap() // this keeps order. that is important.
 
-		val symbols:Set<String> = bySymbol.keys
+    val symbols:Set<String> = bySymbol.keys
 
-		fun fromSymbol( symbol:String ): ExOpType = bySymbol[symbol] ?: throw Exception( "No ExOpType with symbol ${symbol}" )
+    fun fromSymbol( symbol:String ): ExOpType = bySymbol[symbol] ?: throw Exception( "No ExOpType with symbol ${symbol}" )
 
-		init {
-			// Validate that 2 types do not have the same symbol.
-			values().forEach { exOpType ->
-				exOpType.symbols.forEach { symbol ->
-					val t = fromSymbol(symbol)
-					if ( t != exOpType ) {
-						throw Exception( "Symbol \"${symbol}\" is used by both ${t} and ${exOpType}" )
-					}
-				}
+    init {
+      // Validate that 2 types do not have the same symbol.
+      values().forEach { exOpType ->
+        exOpType.symbols.forEach { symbol ->
+          val t = fromSymbol(symbol)
+          if ( t != exOpType ) {
+            throw Exception( "Symbol \"${symbol}\" is used by both ${t} and ${exOpType}" )
+          }
+        }
 
-			}
-		}
-	}
+      }
+    }
+  }
 
-	val symbol:String = if ( symbols.isNotEmpty() ) symbols.first() else throw Exception( "ExOpType.${name} Must have at least one symbol." )
+  val symbol:String = if ( symbols.isNotEmpty() ) symbols.first() else throw Exception( "ExOpType.${name} Must have at least one symbol." )
 
 }

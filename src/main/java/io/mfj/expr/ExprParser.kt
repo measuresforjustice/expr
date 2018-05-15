@@ -12,7 +12,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- */
+*/
 
 package io.mfj.expr
 
@@ -22,27 +22,27 @@ import org.parboiled.parserunners.ReportingParseRunner
 
 object ExprParser {
 
-	fun parse(exp: String) : ExNode {
-		//println("-=-= parsing: $exp")
-		val parser = Parboiled.createParser(ExprPegParser::class.java)
-		val result = ReportingParseRunner<Any>(parser.Root()).run(exp)
-		if ( result.hasErrors() ) {
-			throw Exception( ErrorUtils.printParseError( result.parseErrors[0] ) )
-		}
-		if (!result.valueStack.isEmpty) {
-			val root = result.valueStack.pop() as ExNode
-			if (root.node_type == ExNodeType.CONJUNCTION && root.conj_type == null && root.children.size == 1) {
-				return root.children[0]
-			}
-			return root
-		} else {
-			throw RuntimeException("Error parsing expression $exp")
-		}
-	}
+  fun parse(exp: String) : ExNode {
+    //println("-=-= parsing: $exp")
+    val parser = Parboiled.createParser(ExprPegParser::class.java)
+    val result = ReportingParseRunner<Any>(parser.Root()).run(exp)
+    if ( result.hasErrors() ) {
+      throw Exception( ErrorUtils.printParseError( result.parseErrors[0] ) )
+    }
+    if (!result.valueStack.isEmpty) {
+      val root = result.valueStack.pop() as ExNode
+      if (root.node_type == ExNodeType.CONJUNCTION && root.conj_type == null && root.children.size == 1) {
+        return root.children[0]
+      }
+      return root
+    } else {
+      throw RuntimeException("Error parsing expression $exp")
+    }
+  }
 
-	fun parseToExpr(exp: String, model:VarTypeProvider ) : Expr {
-		return parse(exp).toExpr(model)
-	}
+  fun parseToExpr(exp: String, model:VarTypeProvider ) : Expr {
+    return parse(exp).toExpr(model)
+  }
 
 
 }
