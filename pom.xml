@@ -6,12 +6,34 @@
   <artifactId>expr</artifactId>
   <version>4.0-SNAPSHOT</version>
 
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>A handy expression parser.</description>
+  <url>https://measuresforjustice.org/opensource#expr</url>
+
+  <developers>
+    <developer>
+      <name>Measures for Justice</name>
+      <email>opensource@measuresforjustice.org</email>
+      <organization>Measures for Justice</organization>
+      <organizationUrl>https://measuresforjustice.org/</organizationUrl>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <dokka.version>0.9.7</dokka.version>
+    <dokka.version>0.9.17</dokka.version>
     <kotlin.version>1.2.31</kotlin.version>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <build>
@@ -65,9 +87,24 @@
         <version>${dokka.version}</version>
         <executions>
           <execution>
-            <phase>pre-site</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>dokka</goal>
+              <goal>javadoc</goal>
+              <goal>javadocJar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
             </goals>
           </execution>
         </executions>
@@ -85,7 +122,7 @@
             <configuration>
               <rules>
                 <requireReleaseDeps>
-                  <message>! ! ! ! ! Cannot have -SNAPSHOT dependencies of a release! ! ! ! !</message>
+                  <message>Cannot have snapshot dependencies of a release!</message>
                   <onlyWhenRelease>true</onlyWhenRelease>
                   <searchTransitive>true</searchTransitive>
                   <failWhenParentIsSnapshot>true</failWhenParentIsSnapshot>

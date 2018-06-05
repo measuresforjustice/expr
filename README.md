@@ -1,6 +1,6 @@
 # Expr
 
-A parser of expressions.
+Expr is a handy expression parser.
 
 _Expr_ is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
