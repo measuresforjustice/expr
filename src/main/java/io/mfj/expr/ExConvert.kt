@@ -16,6 +16,8 @@ limitations under the License.
 
 package io.mfj.expr
 
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.time.*
 import java.time.format.DateTimeFormatter
@@ -49,13 +51,17 @@ object ExConvert {
   fun anyToInt(v: Any?) : Any? = when (v) {
     null -> null
     is Int -> v
+    is Long -> v.toInt()
     is String -> {
       if (v.isEmpty()) {
         null
       } else {
-        v.toInt()
+        BigDecimal(v).setScale(0, RoundingMode.FLOOR).toInt()
       }
     }
+    is Float -> v.toInt()
+    is Double -> v.toInt()
+    is BigDecimal -> v.setScale(0, RoundingMode.FLOOR).toInt()
     else -> "$v".toInt()
   }
 
@@ -67,14 +73,20 @@ object ExConvert {
       if (v.isEmpty()) {
         null
       } else {
-        v.toInt()
+        BigDecimal(v).setScale(0, RoundingMode.FLOOR).toLong()
       }
     }
-    else -> "$v".toInt()
+    is Float -> v.toLong()
+    is Double -> v.toLong()
+    is BigDecimal -> v.setScale(0, RoundingMode.FLOOR).toLong()
+    else -> "$v".toLong()
   }
 
   fun anyToDouble(v: Any?) : Any? = when (v) {
     null -> null
+    is Int -> v.toDouble()
+    is Long -> v.toDouble()
+    is Float -> v.toDouble()
     is Double -> v
     is String -> {
       if (v.isEmpty()) {
@@ -83,6 +95,7 @@ object ExConvert {
         v.toDouble()
       }
     }
+    is BigDecimal -> v.toDouble()
     else -> "$v".toDouble()
   }
 
