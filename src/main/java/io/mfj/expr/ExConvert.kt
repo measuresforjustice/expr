@@ -25,7 +25,7 @@ import java.util.Date
 
 object ExConvert {
 
-  fun convertStr(v: String?, dataType: ExDataType) : Any? {
+  fun convert(v: Any?, dataType: ExDataType) : Any? {
     try {
       return when (dataType) {
         ExDataType.STRING -> anyToString(v)
@@ -41,6 +41,8 @@ object ExConvert {
       throw RuntimeException("Error converting \"$v\" to $dataType - ${e.message}", e )
     }
   }
+
+  fun convertStr(v: String?, dataType: ExDataType) = convert(v, dataType)
 
   fun anyToString(v: Any?) : String? = when (v) {
     null -> null
