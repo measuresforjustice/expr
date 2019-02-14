@@ -18,5 +18,5 @@ package io.mfj.expr
 
 enum class ExNodeType {
   CONJUNCTION,
-  STATEMENT
+  LOGIC_STATEMENT
 }

@@ -17,14 +17,14 @@ limitations under the License.
 package io.mfj.expr
 
 /**
- * Operator types.
+ * LogicOperator types.
  *
  * ORDER MATTERS! The parser tries these in order, so if a symbol is a prefix of another symbol, it must be later.
  * E.g.: '=~' must be after '='.
  *
  * When generating an expression, the first symbol for an op type is preferred.
  */
-enum class ExOpType(vararg val symbols:String) {
+enum class ExLogicOpType(vararg val symbols:String) {
   REGEX_MATCH("=~"),
   GREATER_EQUAL(">="),
   LESS_EQUAL("<="),
@@ -35,7 +35,7 @@ enum class ExOpType(vararg val symbols:String) {
   ;
 
   companion object {
-    private val bySymbol:Map<String,ExOpType> = values()
+    private val bySymbol:Map<String,ExLogicOpType> = values()
         .map { exOpType ->
             exOpType.symbols.map { symbol ->
               symbol to exOpType
@@ -46,7 +46,7 @@ enum class ExOpType(vararg val symbols:String) {
 
     val symbols:Set<String> = bySymbol.keys
 
-    fun fromSymbol( symbol:String ): ExOpType = bySymbol[symbol] ?: throw Exception( "No ExOpType with symbol ${symbol}" )
+    fun fromSymbol( symbol:String ): ExLogicOpType = bySymbol[symbol] ?: throw Exception( "No ExLogicOpType with symbol ${symbol}" )
 
     init {
       // Validate that 2 types do not have the same symbol.
@@ -62,6 +62,6 @@ enum class ExOpType(vararg val symbols:String) {
     }
   }
 
-  val symbol:String = if ( symbols.isNotEmpty() ) symbols.first() else throw Exception( "ExOpType.${name} Must have at least one symbol." )
+  val symbol:String = if ( symbols.isNotEmpty() ) symbols.first() else throw Exception( "ExLogicOpType.${name} Must have at least one symbol." )
 
 }

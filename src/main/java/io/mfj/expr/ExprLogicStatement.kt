@@ -20,7 +20,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class ExprStatement(val left: ExValue, var op: ExOpType, val right:ExValue, var not: Boolean = false) : Expr {
+class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExValue, var not: Boolean = false) : Expr {
 
   override fun value(vp: VarProvider) : Boolean {
 
@@ -36,16 +36,16 @@ class ExprStatement(val left: ExValue, var op: ExOpType, val right:ExValue, var 
     }
   }
 
-  private fun calc( leftVal:Any?, op:ExOpType, rightVal:Any? ): Boolean {
+  private fun calc(leftVal:Any?, op:ExLogicOpType, rightVal:Any? ): Boolean {
     return when ( op ) {
-      ExOpType.EQUAL -> {
+      ExLogicOpType.EQUAL -> {
         if ( leftVal is Number && rightVal is Number ) {
           leftVal.toDouble() == rightVal.toDouble()
         } else {
           leftVal == rightVal
         }
       }
-      ExOpType.REGEX_MATCH -> {
+      ExLogicOpType.REGEX_MATCH -> {
         if ( leftVal != null ) {
           if ( ! ( leftVal is String ) ) throw IllegalArgumentException( "Regex input must be a String, not ${leftVal.javaClass}" )
           val regex = if ( rightVal is Regex ) rightVal else Regex( rightVal.toString() )
@@ -54,9 +54,9 @@ class ExprStatement(val left: ExValue, var op: ExOpType, val right:ExValue, var 
           false
         }
       }
-      ExOpType.GREATER -> {
+      ExLogicOpType.GREATER -> {
         if ( leftVal == null || rightVal == null ) {
-          throw IllegalArgumentException( "operands for ${ExOpType.GREATER.symbol} cannot be null" )
+          throw IllegalArgumentException( "operands for ${ExLogicOpType.GREATER.symbol} cannot be null" )
         } else if ( leftVal is Number && rightVal is Number ) {
           leftVal.toDouble() > rightVal.toDouble()
         } else if ( leftVal is LocalDate && rightVal is LocalDate ) {
@@ -66,12 +66,12 @@ class ExprStatement(val left: ExValue, var op: ExOpType, val right:ExValue, var 
         } else if ( leftVal is LocalDateTime && rightVal is LocalDateTime ) {
           leftVal > rightVal
         } else {
-          throw IllegalArgumentException( "both operands for ${ExOpType.GREATER.symbol} must be numbers or dates/times/datetimes" )
+          throw IllegalArgumentException( "both operands for ${ExLogicOpType.GREATER.symbol} must be numbers or dates/times/datetimes" )
         }
       }
-      ExOpType.GREATER_EQUAL -> {
+      ExLogicOpType.GREATER_EQUAL -> {
         if ( leftVal == null || rightVal == null ) {
-          throw IllegalArgumentException( "operands for ${ExOpType.GREATER_EQUAL} cannot be null" )
+          throw IllegalArgumentException( "operands for ${ExLogicOpType.GREATER_EQUAL} cannot be null" )
         } else if ( leftVal is Number && rightVal is Number ) {
           leftVal.toDouble() >= rightVal.toDouble()
         } else if ( leftVal is LocalDate && rightVal is LocalDate ) {
@@ -81,12 +81,12 @@ class ExprStatement(val left: ExValue, var op: ExOpType, val right:ExValue, var 
         } else if ( leftVal is LocalDateTime && rightVal is LocalDateTime ) {
           leftVal >= rightVal
         } else {
-          throw IllegalArgumentException( "both operands for ${ExOpType.GREATER_EQUAL.symbol} must be numbers or dates/times/datetimes" )
+          throw IllegalArgumentException( "both operands for ${ExLogicOpType.GREATER_EQUAL.symbol} must be numbers or dates/times/datetimes" )
         }
       }
-      ExOpType.LESS -> {
+      ExLogicOpType.LESS -> {
         if ( leftVal == null || rightVal == null ) {
-          throw IllegalArgumentException( "operands for ${ExOpType.LESS.symbol} cannot be null" )
+          throw IllegalArgumentException( "operands for ${ExLogicOpType.LESS.symbol} cannot be null" )
         } else if ( leftVal is Number && rightVal is Number ) {
           leftVal.toDouble() < rightVal.toDouble()
         } else if ( leftVal is LocalDate && rightVal is LocalDate ) {
@@ -96,12 +96,12 @@ class ExprStatement(val left: ExValue, var op: ExOpType, val right:ExValue, var 
         } else if ( leftVal is LocalDateTime && rightVal is LocalDateTime ) {
           leftVal < rightVal
         } else {
-          throw IllegalArgumentException( "both operands for ${ExOpType.LESS.symbol} must be numbers or dates/times/datetimes" )
+          throw IllegalArgumentException( "both operands for ${ExLogicOpType.LESS.symbol} must be numbers or dates/times/datetimes" )
         }
       }
-      ExOpType.LESS_EQUAL -> {
+      ExLogicOpType.LESS_EQUAL -> {
         if ( leftVal == null || rightVal == null ) {
-          throw IllegalArgumentException( "operands for ${ExOpType.LESS_EQUAL} cannot be null" )
+          throw IllegalArgumentException( "operands for ${ExLogicOpType.LESS_EQUAL} cannot be null" )
         } else if ( leftVal is Number && rightVal is Number ) {
           leftVal.toDouble() <= rightVal.toDouble()
         } else if ( leftVal is LocalDate && rightVal is LocalDate ) {
@@ -111,10 +111,10 @@ class ExprStatement(val left: ExValue, var op: ExOpType, val right:ExValue, var 
         } else if ( leftVal is LocalDateTime && rightVal is LocalDateTime ) {
           leftVal <= rightVal
         } else {
-          throw IllegalArgumentException( "both operands for ${ExOpType.LESS_EQUAL.symbol} must be numbers or dates/times/datetimes" )
+          throw IllegalArgumentException( "both operands for ${ExLogicOpType.LESS_EQUAL.symbol} must be numbers or dates/times/datetimes" )
         }
       }
-      ExOpType.NOT_EQUAL -> { leftVal != rightVal }
+      ExLogicOpType.NOT_EQUAL -> { leftVal != rightVal }
     }
   }
 
@@ -129,7 +129,7 @@ class ExprStatement(val left: ExValue, var op: ExOpType, val right:ExValue, var 
   }
 
   override fun clone() : Expr {
-    return ExprStatement(this.left, this.op, this.right, this.not)
+    return ExprLogicStatement(this.left, this.op, this.right, this.not)
   }
 
   override fun cloneReplacingForField(fieldName: String?, withExpr: Expr?) : Expr {

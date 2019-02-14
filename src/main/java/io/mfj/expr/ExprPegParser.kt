@@ -86,27 +86,45 @@ open class ExprPegParser : BaseParser<Any>() {
   open fun Statement() : Rule {
     val v = Var<ExNode>()
     return Sequence(
-      v.set(ExNode(ExNodeType.STATEMENT)),
-      Value(),
+      v.set(ExNode(ExNodeType.LOGIC_STATEMENT)),
+      FirstOf(MathStatement(), Value()),
       v.get().setLeft(pop() as ExVal),
       ZeroOrMore(Whitespace()),
-      Operator(),
+      LogicOperator(),
       ZeroOrMore(Whitespace()),
       v.get().setOp(pop() as String),
-      Value(),
+        FirstOf(MathStatement(), Value()),
       v.get().setRight(pop() as ExVal),
 
       Optional(
           ZeroOrMore(Whitespace()),
-          Operator(),
+          LogicOperator(),
           ZeroOrMore(Whitespace()),
           v.get().setOp2(pop() as String),
-          Value(),
+          FirstOf(MathStatement(), Value()),
           v.get().setRight2(pop() as ExVal)
       ),
 
       pushStatement(v.get())
     )
+  }
+
+  open fun MathStatement() : Rule {
+      val l = Var<ExVal>()
+      val o = Var<ExMathOpType>()
+      val r = Var<ExVal>()
+
+      return Sequence(
+          Value(),
+          l.set(pop() as ExVal),
+          ZeroOrMore(Whitespace()),
+          MathOperator(),
+          ZeroOrMore(Whitespace()),
+          o.set(ExMathOpType.fromSymbol(pop() as String)),
+          FirstOf(MathStatement(), Value()),
+          r.set(pop() as ExVal),
+          push(ExCom(l.get(), o.get(), r.get()))
+      )
   }
 
   open fun Value() : Rule {
@@ -126,9 +144,16 @@ open class ExprPegParser : BaseParser<Any>() {
     )
   }
 
-  open fun Operator() : Rule {
+  open fun LogicOperator() : Rule {
     return Sequence(
-      FirstOf( ExOpType.symbols.toTypedArray() ),
+      FirstOf( ExLogicOpType.symbols.toTypedArray() ),
+      push(match())
+    )
+  }
+
+  open fun MathOperator() : Rule {
+    return Sequence(
+      FirstOf( ExMathOpType.symbols.toTypedArray() ),
       push(match())
     )
   }
@@ -377,3 +402,4 @@ open class ExprPegParser : BaseParser<Any>() {
 sealed class ExVal
 class ExLit( val type:ExDataType, val value:String? ): ExVal()
 class ExVar( val name:String ): ExVal()
+class ExCom( val left:ExVal, val op: ExMathOpType, val right: ExVal): ExVal()
