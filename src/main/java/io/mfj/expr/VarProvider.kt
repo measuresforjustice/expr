@@ -28,11 +28,14 @@ interface VarProvider {
      * @throws IllegalArgumentException if there is no such variable.
      */
     operator fun get(varName: String): Any?
+
+    fun getKnownVars() : Set<String>
 }
 
 object EmptyVarProvider : VarProvider {
     override fun contains(varName: String): Boolean = false
     override fun get(varName: String): Any? = throw IllegalArgumentException("No such variable \"${varName}\".")
+    override fun getKnownVars(): Set<String> = emptySet()
 }
 
 class ChainVarProvider(vararg val vps: VarProvider) : VarProvider {
@@ -42,6 +45,10 @@ class ChainVarProvider(vararg val vps: VarProvider) : VarProvider {
     override fun get(varName: String): Any? {
         return vps.first { it.contains(varName) }.get(varName)
         throw IllegalArgumentException("No such variable \"${varName}\".")
+    }
+
+    override fun getKnownVars(): Set<String> {
+        return vps.flatMap { it.getKnownVars() }.toSet()
     }
 
 }
@@ -58,6 +65,10 @@ open class MapVarProvider(private val map: Map<String, Any?>) : VarProvider {
       } else {
         throw IllegalArgumentException( "No such variable \"${varName}\"." )
       }
+
+    override fun getKnownVars(): Set<String> {
+        return map.keys
+    }
 
 }
 

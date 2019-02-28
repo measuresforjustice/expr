@@ -61,4 +61,6 @@ enum class ExMathOpType(vararg val symbols:String) {
 
   val symbol:String = if ( symbols.isNotEmpty() ) symbols.first() else throw Exception( "ExMathOpType.${name} Must have at least one symbol." )
 
+  override fun toString() = symbol
+
 }

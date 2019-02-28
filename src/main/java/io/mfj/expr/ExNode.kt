@@ -16,8 +16,6 @@ limitations under the License.
 
 package io.mfj.expr
 
-import kotlin.IllegalArgumentException
-
 class ExNode(val node_type: ExNodeType) {
   var parent: ExNode? = null
   var conj_type: ExConjType? = null
@@ -207,4 +205,6 @@ class ExValueCompound( private val left:ExValue, private val op: ExMathOpType, p
             ExMathOpType.MINUS -> left - right
         }
     }
+
+    override fun toString() = "$left$op$right"
 }
