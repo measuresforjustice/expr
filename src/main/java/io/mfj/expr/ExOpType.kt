@@ -19,8 +19,8 @@ package io.mfj.expr
 /**
  * Operator types.
  *
- * ORDER MATTERS! The parser tries these in order, so if a symbol is a prefix of another symbol, it must be later.
- * E.g.: '=~' must be after '='.
+ * ORDER MATTERS! The parser tries these in order, so if a symbol is a prefix
+ * of another symbol, it must be later. E.g.: '=' must be after '=~'.
  *
  * When generating an expression, the first symbol for an op type is preferred.
  */
