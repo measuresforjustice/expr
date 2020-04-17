@@ -44,7 +44,7 @@ class ChainVarProvider(vararg val vps: VarProvider) : VarProvider {
 
     override fun get(varName: String): Any? {
         return vps.first { it.contains(varName) }.get(varName)
-        throw IllegalArgumentException("No such variable \"${varName}\".")
+            ?: throw IllegalArgumentException("No such variable \"${varName}\".")
     }
 
     override fun getKnownVars(): Set<String> {
