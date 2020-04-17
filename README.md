@@ -27,7 +27,7 @@ _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr
 * Date :            "d'" ISO_8601_Date "'"
 * Time :            "t'" ISO_8601_Time "'"
 * DateTime :        "dt'" ISO_8601_DateTime "'"
-* VariableName :    /[a-zA-Z_][a-zA-Z0-9_]+/
+* VariableName :    /[a-zA-Z_][a-zA-Z0-9_]*/
 ```
 
 ### What is up with the optional part of Statement?

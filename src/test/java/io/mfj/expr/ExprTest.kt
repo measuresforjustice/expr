@@ -423,4 +423,24 @@ class ExprTest {
       true
   )
 
+  @Test
+  fun testStringCompare() {
+    test("ss > \"abc\"",
+            mapOf("ss" to "def"),
+            true)
+    test("ss >= \"abc\"",
+            mapOf("ss" to "abc"),
+            true)
+    test("ss < \"def\"",
+            mapOf("ss" to "abc"),
+            true)
+    test("ss <= \"def\"",
+            mapOf("ss" to "def"),
+            true)
+  }
+
+  @Test
+  fun testSingleLetterVarName() {
+    ExprParser.parse("a < 5")
+  }
 }

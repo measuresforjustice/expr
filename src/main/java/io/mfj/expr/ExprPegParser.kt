@@ -305,7 +305,7 @@ open class ExprPegParser : BaseParser<Any>() {
     return Sequence(
       Letter(),
       push(match()),
-      OneOrMore(LetterOrDigit()),
+      ZeroOrMore(LetterOrDigit()),
       push("${pop() as String}${match()}"),
       TestNot(LetterOrDigit()),
       push(ExVar(pop() as String))

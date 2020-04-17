@@ -47,7 +47,7 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
       }
       ExLogicOpType.REGEX_MATCH -> {
         if ( leftVal != null ) {
-          if ( ! ( leftVal is String ) ) throw IllegalArgumentException( "Regex input must be a String, not ${leftVal.javaClass}" )
+          if (leftVal !is String) throw IllegalArgumentException( "Regex input must be a String, not ${leftVal.javaClass}" )
           val regex = if ( rightVal is Regex ) rightVal else Regex( rightVal.toString() )
           regex.matchEntire( leftVal ) != null
         } else {
@@ -55,63 +55,103 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
         }
       }
       ExLogicOpType.GREATER -> {
-        if ( leftVal == null || rightVal == null ) {
-          throw IllegalArgumentException( "operands for ${ExLogicOpType.GREATER.symbol} cannot be null" )
-        } else if ( leftVal is Number && rightVal is Number ) {
-          leftVal.toDouble() > rightVal.toDouble()
-        } else if ( leftVal is LocalDate && rightVal is LocalDate ) {
-          leftVal > rightVal
-        } else if ( leftVal is LocalTime && rightVal is LocalTime ) {
-          leftVal > rightVal
-        } else if ( leftVal is LocalDateTime && rightVal is LocalDateTime ) {
-          leftVal > rightVal
-        } else {
-          throw IllegalArgumentException( "both operands for ${ExLogicOpType.GREATER.symbol} must be numbers or dates/times/datetimes" )
+        when {
+          leftVal == null || rightVal == null -> {
+            throw IllegalArgumentException( "operands for ${ExLogicOpType.GREATER.symbol} cannot be null" )
+          }
+		  leftVal is String && rightVal is String -> {
+            leftVal > rightVal
+          }
+          leftVal is Number && rightVal is Number -> {
+            leftVal.toDouble() > rightVal.toDouble()
+          }
+          leftVal is LocalDate && rightVal is LocalDate -> {
+            leftVal > rightVal
+          }
+          leftVal is LocalTime && rightVal is LocalTime -> {
+            leftVal > rightVal
+          }
+          leftVal is LocalDateTime && rightVal is LocalDateTime -> {
+            leftVal > rightVal
+          }
+          else -> {
+            throw IllegalArgumentException( "both operands for ${ExLogicOpType.GREATER.symbol} must be numbers or dates/times/datetimes" )
+          }
         }
       }
       ExLogicOpType.GREATER_EQUAL -> {
-        if ( leftVal == null || rightVal == null ) {
-          throw IllegalArgumentException( "operands for ${ExLogicOpType.GREATER_EQUAL} cannot be null" )
-        } else if ( leftVal is Number && rightVal is Number ) {
-          leftVal.toDouble() >= rightVal.toDouble()
-        } else if ( leftVal is LocalDate && rightVal is LocalDate ) {
-          leftVal >= rightVal
-        } else if ( leftVal is LocalTime && rightVal is LocalTime ) {
-          leftVal >= rightVal
-        } else if ( leftVal is LocalDateTime && rightVal is LocalDateTime ) {
-          leftVal >= rightVal
-        } else {
-          throw IllegalArgumentException( "both operands for ${ExLogicOpType.GREATER_EQUAL.symbol} must be numbers or dates/times/datetimes" )
+        when {
+          leftVal == null || rightVal == null -> {
+            throw IllegalArgumentException( "operands for ${ExLogicOpType.GREATER_EQUAL} cannot be null" )
+          }
+          leftVal is String && rightVal is String -> {
+            leftVal >= rightVal
+          }
+          leftVal is Number && rightVal is Number -> {
+            leftVal.toDouble() >= rightVal.toDouble()
+          }
+          leftVal is LocalDate && rightVal is LocalDate -> {
+            leftVal >= rightVal
+          }
+          leftVal is LocalTime && rightVal is LocalTime -> {
+            leftVal >= rightVal
+          }
+          leftVal is LocalDateTime && rightVal is LocalDateTime -> {
+            leftVal >= rightVal
+          }
+          else -> {
+            throw IllegalArgumentException( "both operands for ${ExLogicOpType.GREATER_EQUAL.symbol} must be numbers or dates/times/datetimes" )
+          }
         }
       }
       ExLogicOpType.LESS -> {
-        if ( leftVal == null || rightVal == null ) {
-          throw IllegalArgumentException( "operands for ${ExLogicOpType.LESS.symbol} cannot be null" )
-        } else if ( leftVal is Number && rightVal is Number ) {
-          leftVal.toDouble() < rightVal.toDouble()
-        } else if ( leftVal is LocalDate && rightVal is LocalDate ) {
-          leftVal < rightVal
-        } else if ( leftVal is LocalTime && rightVal is LocalTime ) {
-          leftVal < rightVal
-        } else if ( leftVal is LocalDateTime && rightVal is LocalDateTime ) {
-          leftVal < rightVal
-        } else {
-          throw IllegalArgumentException( "both operands for ${ExLogicOpType.LESS.symbol} must be numbers or dates/times/datetimes" )
+        when {
+          leftVal == null || rightVal == null -> {
+            throw IllegalArgumentException( "operands for ${ExLogicOpType.LESS.symbol} cannot be null" )
+          }
+          leftVal is String && rightVal is String -> {
+            leftVal < rightVal
+          }
+          leftVal is Number && rightVal is Number -> {
+            leftVal.toDouble() < rightVal.toDouble()
+          }
+          leftVal is LocalDate && rightVal is LocalDate -> {
+            leftVal < rightVal
+          }
+          leftVal is LocalTime && rightVal is LocalTime -> {
+            leftVal < rightVal
+          }
+          leftVal is LocalDateTime && rightVal is LocalDateTime -> {
+            leftVal < rightVal
+          }
+          else -> {
+            throw IllegalArgumentException( "both operands for ${ExLogicOpType.LESS.symbol} must be numbers or dates/times/datetimes" )
+          }
         }
       }
       ExLogicOpType.LESS_EQUAL -> {
-        if ( leftVal == null || rightVal == null ) {
-          throw IllegalArgumentException( "operands for ${ExLogicOpType.LESS_EQUAL} cannot be null" )
-        } else if ( leftVal is Number && rightVal is Number ) {
-          leftVal.toDouble() <= rightVal.toDouble()
-        } else if ( leftVal is LocalDate && rightVal is LocalDate ) {
-          leftVal <= rightVal
-        } else if ( leftVal is LocalTime && rightVal is LocalTime ) {
-          leftVal <= rightVal
-        } else if ( leftVal is LocalDateTime && rightVal is LocalDateTime ) {
-          leftVal <= rightVal
-        } else {
-          throw IllegalArgumentException( "both operands for ${ExLogicOpType.LESS_EQUAL.symbol} must be numbers or dates/times/datetimes" )
+        when {
+          leftVal == null || rightVal == null -> {
+            throw IllegalArgumentException( "operands for ${ExLogicOpType.LESS_EQUAL} cannot be null" )
+          }
+          leftVal is String && rightVal is String -> {
+            leftVal <= rightVal
+          }
+          leftVal is Number && rightVal is Number -> {
+            leftVal.toDouble() <= rightVal.toDouble()
+          }
+          leftVal is LocalDate && rightVal is LocalDate -> {
+            leftVal <= rightVal
+          }
+          leftVal is LocalTime && rightVal is LocalTime -> {
+            leftVal <= rightVal
+          }
+          leftVal is LocalDateTime && rightVal is LocalDateTime -> {
+            leftVal <= rightVal
+          }
+          else -> {
+            throw IllegalArgumentException( "both operands for ${ExLogicOpType.LESS_EQUAL.symbol} must be numbers or dates/times/datetimes" )
+          }
         }
       }
       ExLogicOpType.NOT_EQUAL -> { leftVal != rightVal }
