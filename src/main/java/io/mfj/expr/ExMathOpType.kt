@@ -17,25 +17,20 @@ limitations under the License.
 package io.mfj.expr
 
 /**
- * Operator types.
+ * Math Operator types.
  *
- * ORDER MATTERS! The parser tries these in order, so if a symbol is a prefix
- * of another symbol, it must be later. E.g.: '=' must be after '=~'.
+ * ORDER MATTERS! The parser tries these in order, so if a symbol is a prefix of another symbol, it must be later.
+ * E.g.: '=~' must be after '='.
  *
  * When generating an expression, the first symbol for an op type is preferred.
  */
-enum class ExOpType(vararg val symbols:String) {
-  REGEX_MATCH("=~"),
-  GREATER_EQUAL(">="),
-  LESS_EQUAL("<="),
-  NOT_EQUAL("<>","!="),
-  EQUAL("="),
-  GREATER(">"),
-  LESS("<"),
+enum class ExMathOpType(vararg val symbols:String) {
+  PLUS("+"),
+  MINUS("-"),
   ;
 
   companion object {
-    private val bySymbol:Map<String,ExOpType> = values()
+    private val bySymbol:Map<String,ExMathOpType> = values()
         .map { exOpType ->
             exOpType.symbols.map { symbol ->
               symbol to exOpType
@@ -46,7 +41,9 @@ enum class ExOpType(vararg val symbols:String) {
 
     val symbols:Set<String> = bySymbol.keys
 
-    fun fromSymbol( symbol:String ): ExOpType = bySymbol[symbol] ?: throw Exception( "No ExOpType with symbol ${symbol}" )
+    val symbolsString:String = symbols.fold("") { i, n -> i + n }
+
+    fun fromSymbol( symbol:String ): ExMathOpType = bySymbol[symbol] ?: throw Exception( "No ExMathOpType with symbol ${symbol}" )
 
     init {
       // Validate that 2 types do not have the same symbol.
@@ -62,6 +59,8 @@ enum class ExOpType(vararg val symbols:String) {
     }
   }
 
-  val symbol:String = if ( symbols.isNotEmpty() ) symbols.first() else throw Exception( "ExOpType.${name} Must have at least one symbol." )
+  val symbol:String = if ( symbols.isNotEmpty() ) symbols.first() else throw Exception( "ExMathOpType.${name} Must have at least one symbol." )
+
+  override fun toString() = symbol
 
 }

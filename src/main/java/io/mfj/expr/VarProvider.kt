@@ -18,43 +18,46 @@ package io.mfj.expr
 
 interface VarProvider {
 
-  fun contains(varName:String): Boolean
+    fun contains(varName: String): Boolean
 
-  /**
-   * Get the value for the specified variable.
-   *
-   * @param varName Variable name
-   * @return value (which may be null)
-   * @throws IllegalArgumentException if there is no such variable.
-   */
-  operator fun get(varName: String) : Any?
+    /**
+     * Get the value for the specified variable.
+     *
+     * @param varName Variable name
+     * @return value (which may be null)
+     * @throws IllegalArgumentException if there is no such variable.
+     */
+    operator fun get(varName: String): Any?
+
+    fun getKnownVars() : Set<String>
 }
 
 object EmptyVarProvider : VarProvider {
-  override fun contains(varName:String):Boolean = false
-  override fun get(varName:String):Any? = throw IllegalArgumentException( "No such variable \"${varName}\"." )
+    override fun contains(varName: String): Boolean = false
+    override fun get(varName: String): Any? = throw IllegalArgumentException("No such variable \"${varName}\".")
+    override fun getKnownVars(): Set<String> = emptySet()
 }
 
-class ChainVarProvider( vararg val vps:VarProvider ): VarProvider {
+class ChainVarProvider(vararg val vps: VarProvider) : VarProvider {
 
-  override fun contains( varName:String ) = vps.any { vp -> vp.contains( varName ) }
+    override fun contains(varName: String) = vps.any { vp -> vp.contains(varName) }
 
-  override fun get(varName:String):Any? {
-    for ( vp in vps ) {
-      if ( vp.contains( varName ) ) {
-        return vp[varName]
-      }
+    override fun get(varName: String): Any? {
+        return vps.first { it.contains(varName) }.get(varName)
+            ?: throw IllegalArgumentException("No such variable \"${varName}\".")
     }
-    throw IllegalArgumentException( "No such variable \"${varName}\"." )
-  }
+
+    override fun getKnownVars(): Set<String> {
+        return vps.flatMap { it.getKnownVars() }.toSet()
+    }
 
 }
 
-open class MapVarProvider( private val map:Map<String,Any?> ) : VarProvider {
+open class MapVarProvider(private val map: Map<String, Any?>) : VarProvider {
 
-  constructor( vararg values:Pair<String,Any?> ): this( values.toMap() )
+    constructor(vararg values: Pair<String, Any?>) : this(values.toMap())
 
-  override fun contains(varName:String):Boolean = map.containsKey( varName )
+    override fun contains(varName: String): Boolean = map.containsKey(varName)
 
   override operator fun get(varName: String): Any? =
       if ( map.containsKey( varName ) ) {
@@ -63,13 +66,17 @@ open class MapVarProvider( private val map:Map<String,Any?> ) : VarProvider {
         throw IllegalArgumentException( "No such variable \"${varName}\"." )
       }
 
+    override fun getKnownVars(): Set<String> {
+        return map.keys
+    }
+
 }
 
-class MutableMapVarProvider( private val map:MutableMap<String,Any?> ) : MapVarProvider(map) {
+class MutableMapVarProvider(private val map: MutableMap<String, Any?>) : MapVarProvider(map) {
 
-  constructor( vararg values:Pair<String,Any?> ): this( values.toMap().toMutableMap() )
+    constructor(vararg values: Pair<String, Any?>) : this(values.toMap().toMutableMap())
 
-  override fun contains(varName:String):Boolean = map.containsKey( varName )
+    override fun contains(varName: String): Boolean = map.containsKey(varName)
 
   override operator fun get(varName: String): Any? =
       if ( map.containsKey( varName ) ) {
@@ -78,8 +85,8 @@ class MutableMapVarProvider( private val map:MutableMap<String,Any?> ) : MapVarP
         throw IllegalArgumentException( "No such variable \"${varName}\"." )
       }
 
-  operator fun set( varName:String, value:Any? ) {
-    map[varName] = value
-  }
+    operator fun set(varName: String, value: Any?) {
+        map[varName] = value
+    }
 
 }

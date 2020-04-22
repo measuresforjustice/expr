@@ -79,13 +79,13 @@ class ExNode(val node_type: ExNodeType) {
       conj_type = ExConjType.AND
     }
     return when(node_type) {
-      ExNodeType.STATEMENT -> {
+      ExNodeType.LOGIC_STATEMENT -> {
         val left = this.left ?: throw Exception( "Left not set" )
         val right = this.right ?: throw Exception( "Right not set" )
         val leftValue = getExValue( left, model )
         val rightValue = getExValue( right, model )
 
-        val stmt = ExprStatement( leftValue, ExOpType.fromSymbol(op!!), rightValue, not)
+        val stmt = ExprLogicStatement( leftValue, ExLogicOpType.fromSymbol(op!!), rightValue, not)
 
         if ( op2 == null ) {
           if ( right2 != null ) throw Exception( "If right2 (${right2}) is not null, op2 must not be null" )
@@ -96,7 +96,7 @@ class ExNode(val node_type: ExNodeType) {
           val right2Value = getExValue( right2!!, model )
 
           stmt.not = false
-          val stmt2 = ExprStatement( rightValue, ExOpType.fromSymbol(op2!!), right2Value, false )
+          val stmt2 = ExprLogicStatement( rightValue, ExLogicOpType.fromSymbol(op2!!), right2Value, false )
 
           ExprConjunction( ExConjType.AND,
               listOf( stmt, stmt2 ),
@@ -115,11 +115,15 @@ class ExNode(val node_type: ExNodeType) {
         is ExLit -> ExValueLit(
             type = v.type,
             value = ExConvert.convertStr( v.value, v.type ) )
+        is ExCom -> ExValueCompound(
+            left = getExValue(v.left, model),
+            op = v.op,
+            right = getExValue(v.right, model))
       }
 
   override fun toString() : String {
     when(node_type) {
-      ExNodeType.STATEMENT -> return "$left $op $right"
+      ExNodeType.LOGIC_STATEMENT -> return "$left $op $right"
       ExNodeType.CONJUNCTION -> return "$conj_type"
     }
   }
@@ -166,4 +170,41 @@ class ExValueLit( private val type:ExDataType, private val value:Any? ): ExValue
       .replace( "\\", "\\\\" )
       .replace( toEscape, "\\${toEscape}" )
 
+}
+class ExValueCompound( private val left:ExValue, private val op: ExMathOpType, private val right:ExValue): ExValue {
+  init {
+      if( (left.getType() != ExDataType.INTEGER && left.getType() != ExDataType.DOUBLE) ||
+        (right.getType() != ExDataType.INTEGER && right.getType() != ExDataType.DOUBLE) )
+        throw IllegalArgumentException("Left and Right must be numbers")
+  }
+
+  override fun getVariableName(): String? = null
+  override fun getType(): ExDataType = if( left.getType() == ExDataType.DOUBLE || right.getType() == ExDataType.DOUBLE ) ExDataType.DOUBLE else ExDataType.INTEGER
+
+  override fun getValue(vp: VarProvider): Any? {
+      return when (getType()) {
+          ExDataType.INTEGER -> getIntValue(vp)
+          else -> getDoubleValue(vp)
+      }
+  }
+
+    private fun getIntValue(vp: VarProvider): Int {
+        val left = (left.getValue(vp) as Number).toInt()
+        val right = (right.getValue(vp) as Number).toInt()
+        return when (op) {
+            ExMathOpType.PLUS -> left + right
+            ExMathOpType.MINUS -> left - right
+        }
+    }
+
+    private fun getDoubleValue(vp: VarProvider): Double {
+        val left = (left.getValue(vp) as Number).toDouble()
+        val right = (right.getValue(vp) as Number).toDouble()
+        return when (op) {
+            ExMathOpType.PLUS -> left + right
+            ExMathOpType.MINUS -> left - right
+        }
+    }
+
+    override fun toString() = "$left$op$right"
 }

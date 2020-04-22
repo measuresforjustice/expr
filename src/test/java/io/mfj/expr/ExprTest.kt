@@ -403,6 +403,27 @@ class ExprTest {
   )
 
   @Test
+  fun testMathExpression() = test(
+      "two=zero+2",
+      mapOf("zero" to 0, "two" to 2),
+      true
+  )
+
+  @Test
+  fun testMathExpressionFalse() = test(
+      "two=zero+one",
+      mapOf("zero" to 0, "one" to 1, "two" to 2),
+      false
+  )
+
+  @Test
+  fun testCompoundMathExpression() = test(
+      "two=zero+1+1 AND one+1=zero+two",
+      mapOf("zero" to 0, "one" to 1, "two" to 2),
+      true
+  )
+
+  @Test
   fun testStringCompare() {
     test("ss > \"abc\"",
             mapOf("ss" to "def"),
