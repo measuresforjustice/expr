@@ -29,7 +29,7 @@ interface VarProvider {
      */
     operator fun get(varName: String): Any?
 
-    fun getKnownVars() : Set<String>
+    fun getKnownVars(): Set<String>
 }
 
 object EmptyVarProvider : VarProvider {
@@ -43,8 +43,9 @@ class ChainVarProvider(vararg val vps: VarProvider) : VarProvider {
     override fun contains(varName: String) = vps.any { vp -> vp.contains(varName) }
 
     override fun get(varName: String): Any? {
-        return vps.first { it.contains(varName) }.get(varName)
+        val vp = vps.firstOrNull { it.contains(varName) }
             ?: throw IllegalArgumentException("No such variable \"${varName}\".")
+        return vp[varName]
     }
 
     override fun getKnownVars(): Set<String> {
@@ -59,12 +60,12 @@ open class MapVarProvider(private val map: Map<String, Any?>) : VarProvider {
 
     override fun contains(varName: String): Boolean = map.containsKey(varName)
 
-  override operator fun get(varName: String): Any? =
-      if ( map.containsKey( varName ) ) {
-        map[varName]
-      } else {
-        throw IllegalArgumentException( "No such variable \"${varName}\"." )
-      }
+    override operator fun get(varName: String): Any? =
+        if (map.containsKey(varName)) {
+            map[varName]
+        } else {
+            throw IllegalArgumentException("No such variable \"${varName}\".")
+        }
 
     override fun getKnownVars(): Set<String> {
         return map.keys
@@ -78,12 +79,12 @@ class MutableMapVarProvider(private val map: MutableMap<String, Any?>) : MapVarP
 
     override fun contains(varName: String): Boolean = map.containsKey(varName)
 
-  override operator fun get(varName: String): Any? =
-      if ( map.containsKey( varName ) ) {
-        map[varName]
-      } else {
-        throw IllegalArgumentException( "No such variable \"${varName}\"." )
-      }
+    override operator fun get(varName: String): Any? =
+        if (map.containsKey(varName)) {
+            map[varName]
+        } else {
+            throw IllegalArgumentException("No such variable \"${varName}\".")
+        }
 
     operator fun set(varName: String, value: Any?) {
         map[varName] = value
