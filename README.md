@@ -21,8 +21,7 @@ _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr
 * LiteralValue :    Integer | Decimal | String | Regex | Boolean | Date | Time | DateTime
 * String :          '"' TextOrEmpty{" escaped by \} '"'
 * Regex :           '/' TextOrEmpty{/ escaped by \} '/'
-* Decimal :         '-'? Digit+ ( '.' Digit+ )?
-* Integer :         '-'? Digit+
+* Number :          '-'? Digit+ ( '.' Digit+ )?
 * Boolean :         'true' | 'false'
 * Date :            "d'" ISO_8601_Date "'"
 * Time :            "t'" ISO_8601_Time "'"
@@ -40,8 +39,7 @@ It is awesome.
 
 * STRING - `kotlin.String`
 * Regex - `kotlin.text.Regex`
-* Integer - `kotlin.Int`
-* Double - `kotlin.Double`
+* Number - `java.math.BigDecimal`
 * Date - `java.time.LocalDate`
 * Time - `java.time.LocalTime`
 * DateTime - `java.time.LocalDateTime`

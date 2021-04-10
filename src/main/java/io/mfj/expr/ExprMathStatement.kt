@@ -33,8 +33,8 @@ class ExprMathStatement(val left: ExValue, var op: ExMathOpType, val right:ExVal
   }
 
   private fun calc(leftVal:Number, op:ExMathOpType, rightVal:Number ): Number {
-    val l = leftVal.toDouble()
-    val r = rightVal.toDouble()
+    val l = leftVal.asBigDecimal()
+    val r = rightVal.asBigDecimal()
     return when ( op ) {
       ExMathOpType.PLUS -> l + r
       ExMathOpType.MINUS -> l - r

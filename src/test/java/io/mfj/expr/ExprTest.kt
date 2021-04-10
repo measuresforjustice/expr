@@ -24,14 +24,14 @@ import java.time.LocalDateTime
 class ExprTest {
 
   val model = mapOf(
-      "zero" to ExDataType.INTEGER,
-      "one" to ExDataType.INTEGER,
-      "two" to ExDataType.INTEGER,
-      "aa" to ExDataType.INTEGER,
-      "bb" to ExDataType.INTEGER,
-      "cc" to ExDataType.INTEGER,
-      "dd" to ExDataType.INTEGER,
-      "ddd" to ExDataType.DOUBLE,
+      "zero" to ExDataType.NUMBER,
+      "one" to ExDataType.NUMBER,
+      "two" to ExDataType.NUMBER,
+      "aa" to ExDataType.NUMBER,
+      "bb" to ExDataType.NUMBER,
+      "cc" to ExDataType.NUMBER,
+      "dd" to ExDataType.NUMBER,
+      "ddd" to ExDataType.NUMBER,
       "ss" to ExDataType.STRING,
       "rr" to ExDataType.REGEX,
       "dt" to ExDataType.DATE,
@@ -238,6 +238,18 @@ class ExprTest {
   @Test
   fun test27() = test(
       "1 = ddd",
+      mapOf( "ddd" to 1.0 ),
+      true )
+
+  @Test
+  fun testFloatEq() = test(
+      "1.0 = ddd",
+      mapOf( "ddd" to 1.0f ),
+      true )
+
+  @Test
+  fun testDoubleEq() = test(
+      "1.0 = ddd",
       mapOf( "ddd" to 1.0 ),
       true )
 

@@ -40,7 +40,7 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
     return when ( op ) {
       ExLogicOpType.EQUAL -> {
         if ( leftVal is Number && rightVal is Number ) {
-          leftVal.toDouble() == rightVal.toDouble()
+          leftVal.asBigDecimal().compareTo( rightVal.asBigDecimal() ) == 0
         } else {
           leftVal == rightVal
         }
@@ -63,7 +63,7 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
             leftVal > rightVal
           }
           leftVal is Number && rightVal is Number -> {
-            leftVal.toDouble() > rightVal.toDouble()
+            leftVal.asBigDecimal() > rightVal.asBigDecimal()
           }
           leftVal is LocalDate && rightVal is LocalDate -> {
             leftVal > rightVal
@@ -88,7 +88,7 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
             leftVal >= rightVal
           }
           leftVal is Number && rightVal is Number -> {
-            leftVal.toDouble() >= rightVal.toDouble()
+            leftVal.asBigDecimal() >= rightVal.asBigDecimal()
           }
           leftVal is LocalDate && rightVal is LocalDate -> {
             leftVal >= rightVal
@@ -113,7 +113,7 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
             leftVal < rightVal
           }
           leftVal is Number && rightVal is Number -> {
-            leftVal.toDouble() < rightVal.toDouble()
+            leftVal.asBigDecimal() < rightVal.asBigDecimal()
           }
           leftVal is LocalDate && rightVal is LocalDate -> {
             leftVal < rightVal
@@ -138,7 +138,7 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
             leftVal <= rightVal
           }
           leftVal is Number && rightVal is Number -> {
-            leftVal.toDouble() <= rightVal.toDouble()
+            leftVal.asBigDecimal() <= rightVal.asBigDecimal()
           }
           leftVal is LocalDate && rightVal is LocalDate -> {
             leftVal <= rightVal

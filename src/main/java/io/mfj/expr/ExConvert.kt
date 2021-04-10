@@ -17,7 +17,6 @@ limitations under the License.
 package io.mfj.expr
 
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.time.*
 import java.time.format.DateTimeFormatter
@@ -30,8 +29,7 @@ object ExConvert {
       return when (dataType) {
         ExDataType.STRING -> anyToString(v)
         ExDataType.REGEX -> Regex( anyToString(v) ?: throw IllegalArgumentException( "Regex pattern cannot be null" ) )
-        ExDataType.INTEGER -> anyToInt(v)
-        ExDataType.DOUBLE -> anyToDouble(v)
+        ExDataType.NUMBER -> anyToDecimal(v)
         ExDataType.DATE -> anyToLocalDate(v)
         ExDataType.TIME -> anyToLocalTime(v)
         ExDataType.DATETIME -> anyToLocalDateTime(v)
@@ -50,55 +48,11 @@ object ExConvert {
     else -> "$v"
   }
 
-  fun anyToInt(v: Any?) : Any? = when (v) {
+  fun anyToDecimal(v: Any?) : Any? = when (v) {
     null -> null
-    is Int -> v
-    is Long -> v.toInt()
-    is String -> {
-      if (v.isEmpty()) {
-        null
-      } else {
-        BigDecimal(v).setScale(0, RoundingMode.FLOOR).toInt()
-      }
-    }
-    is Float -> v.toInt()
-    is Double -> v.toInt()
-    is BigDecimal -> v.setScale(0, RoundingMode.FLOOR).toInt()
-    else -> "$v".toInt()
-  }
-
-  fun anyToLong(v: Any?) : Any? = when (v) {
-    null -> null
-    is Int -> v.toLong()
-    is Long -> v
-    is String -> {
-      if (v.isEmpty()) {
-        null
-      } else {
-        BigDecimal(v).setScale(0, RoundingMode.FLOOR).toLong()
-      }
-    }
-    is Float -> v.toLong()
-    is Double -> v.toLong()
-    is BigDecimal -> v.setScale(0, RoundingMode.FLOOR).toLong()
-    else -> "$v".toLong()
-  }
-
-  fun anyToDouble(v: Any?) : Any? = when (v) {
-    null -> null
-    is Int -> v.toDouble()
-    is Long -> v.toDouble()
-    is Float -> v.toDouble()
-    is Double -> v
-    is String -> {
-      if (v.isEmpty()) {
-        null
-      } else {
-        v.toDouble()
-      }
-    }
-    is BigDecimal -> v.toDouble()
-    else -> "$v".toDouble()
+    is Number -> v.asBigDecimal()
+    is String -> if ( v.isBlank() ) null else v.toBigDecimal()
+    else -> toString().toBigDecimal()
   }
 
   fun anyToBoolean(v: Any?) : Any? = when (v) {
@@ -163,3 +117,13 @@ object ExConvert {
   }
 
 }
+
+fun Number.asBigDecimal():BigDecimal =
+    when(this) {
+      is BigDecimal -> this
+      is Double -> toBigDecimal()
+      is Float -> toBigDecimal()
+      is Int -> toBigDecimal()
+      is Short -> toInt().toBigDecimal()
+      else -> toString().toBigDecimal()
+    }

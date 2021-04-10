@@ -155,8 +155,7 @@ class ExValueLit( private val type:ExDataType, private val value:Any? ): ExValue
       value?.let { value ->
         when ( type ) {
           ExDataType.STRING -> "\"${escape(value,"\"")}\""
-          ExDataType.DOUBLE -> value.toString()
-          ExDataType.INTEGER -> value.toString()
+          ExDataType.NUMBER -> value.toString()
           ExDataType.REGEX -> "/${escape(value,"/")}/"
           ExDataType.DATE -> "d'${escape(value, "'")}'"
           ExDataType.TIME -> "t'${escape(value, "'")}'"
@@ -173,38 +172,21 @@ class ExValueLit( private val type:ExDataType, private val value:Any? ): ExValue
 }
 class ExValueCompound( private val left:ExValue, private val op: ExMathOpType, private val right:ExValue): ExValue {
   init {
-      if( (left.getType() != ExDataType.INTEGER && left.getType() != ExDataType.DOUBLE) ||
-        (right.getType() != ExDataType.INTEGER && right.getType() != ExDataType.DOUBLE) )
+      if( left.getType() != ExDataType.NUMBER || right.getType() != ExDataType.NUMBER)
         throw IllegalArgumentException("Left and Right must be numbers")
   }
 
   override fun getVariableName(): String? = null
-  override fun getType(): ExDataType = if( left.getType() == ExDataType.DOUBLE || right.getType() == ExDataType.DOUBLE ) ExDataType.DOUBLE else ExDataType.INTEGER
+  override fun getType(): ExDataType = ExDataType.NUMBER
 
-  override fun getValue(vp: VarProvider): Any? {
-      return when (getType()) {
-          ExDataType.INTEGER -> getIntValue(vp)
-          else -> getDoubleValue(vp)
-      }
+  override fun getValue(vp: VarProvider): Any {
+    val left = (left.getValue(vp) as Number).asBigDecimal()
+    val right = (right.getValue(vp) as Number).asBigDecimal()
+    return when (op) {
+      ExMathOpType.PLUS -> left + right
+      ExMathOpType.MINUS -> left - right
+    }
   }
-
-    private fun getIntValue(vp: VarProvider): Int {
-        val left = (left.getValue(vp) as Number).toInt()
-        val right = (right.getValue(vp) as Number).toInt()
-        return when (op) {
-            ExMathOpType.PLUS -> left + right
-            ExMathOpType.MINUS -> left - right
-        }
-    }
-
-    private fun getDoubleValue(vp: VarProvider): Double {
-        val left = (left.getValue(vp) as Number).toDouble()
-        val right = (right.getValue(vp) as Number).toDouble()
-        return when (op) {
-            ExMathOpType.PLUS -> left + right
-            ExMathOpType.MINUS -> left - right
-        }
-    }
 
     override fun toString() = "$left$op$right"
 }

@@ -165,7 +165,6 @@ open class ExprPegParser : BaseParser<Any>() {
   open fun LiteralValue() : Rule {
     return FirstOf(
         DecimalValue(),
-        IntegerValue(),
         StringValue(),
         RegexValue(),
         DateTimeValue(),
@@ -179,7 +178,7 @@ open class ExprPegParser : BaseParser<Any>() {
   open fun DecimalValue() : Rule {
     return Sequence(
         Decimal(),
-        push(ExLit(ExDataType.DOUBLE, match()))
+        push(ExLit(ExDataType.NUMBER, match()))
     )
   }
 
@@ -187,24 +186,12 @@ open class ExprPegParser : BaseParser<Any>() {
     return Sequence(
         Optional(CharMatcher('-')),
         OneOrMore(Digit()),
-        Sequence(
-            CharMatcher('.'),
-            OneOrMore(Digit())
+        Optional(
+            Sequence(
+                CharMatcher('.'),
+                OneOrMore(Digit())
+            )
         )
-    )
-  }
-
-  open fun IntegerValue() : Rule {
-    return Sequence(
-        Integer(),
-        push(ExLit(ExDataType.INTEGER, match()))
-    )
-  }
-
-  open fun Integer() : Rule {
-    return Sequence(
-      Optional(CharMatcher('-')),
-      OneOrMore(Digit())
     )
   }
 

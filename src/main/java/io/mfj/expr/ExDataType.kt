@@ -19,8 +19,7 @@ package io.mfj.expr
 enum class ExDataType {
   STRING,
   REGEX,
-  INTEGER,
-  DOUBLE,
+  NUMBER,
   DATE,
   TIME,
   DATETIME,
