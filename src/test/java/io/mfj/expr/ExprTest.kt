@@ -18,6 +18,7 @@ package io.mfj.expr
 
 import org.junit.Assert.*
 import org.junit.Test
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -44,6 +45,14 @@ class ExprTest {
             vp:Map<String,Any?>,
             value:Boolean
             ) {
+    test(exprStr,model,vp,value)
+  }
+
+  fun test( exprStr:String,
+      model:Map<String,ExDataType>,
+      vp:Map<String,Any?>,
+      value:Boolean
+  ) {
     val expr = ExprParser.parseToExpr(exprStr, MapVarTypeProvider(model) )
     val ret = expr.value( MapVarProvider( vp ) )
     assertEquals( value, ret )
@@ -455,4 +464,213 @@ class ExprTest {
   fun testSingleLetterVarName() {
     ExprParser.parse("a < 5")
   }
+
+  @Test
+  fun testCompareDoubleFloat() {
+    test(
+        exprStr = "a = b",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to 3.7,
+            "b" to 3.7f
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareDoubleInt() {
+    test(
+        exprStr = "a = b",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to 3.0,
+            "b" to 3
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareFloatInt() {
+    test(
+        exprStr = "a = b",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to 3.0f,
+            "b" to 3
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareFloatBigDecimal() {
+    test(
+        exprStr = "a = b",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to 3.2f,
+            "b" to BigDecimal("3.2")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareDoubleBigDecimal() {
+    test(
+        exprStr = "a = b",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to 3.3,
+            "b" to BigDecimal("3.3")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareIntBigDecimal() {
+    test(
+        exprStr = "a = b",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to 3,
+            "b" to BigDecimal("3.0")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareDoubleLiteral() {
+    test(
+        exprStr = "a = 3",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+        ),
+        vp = mapOf(
+            "a" to 3.0,
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareFloatLiteral() {
+    test(
+        exprStr = "a = 3",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+        ),
+        vp = mapOf(
+            "a" to 3.0f,
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareIntLiteral() {
+    test(
+        exprStr = "a = 3",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+        ),
+        vp = mapOf(
+            "a" to 3,
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareBigDecimalLiteral() {
+    test(
+        exprStr = "a = 3",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3.0")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareDoubleLiteralDecimal() {
+    test(
+        exprStr = "a = 3.5",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+        ),
+        vp = mapOf(
+            "a" to 3.5,
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareFloatLiteralDecimal() {
+    test(
+        exprStr = "a = 3.9",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+        ),
+        vp = mapOf(
+            "a" to 3.9f,
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareIntLiteralDecimal() {
+    test(
+        exprStr = "a = 3.0",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+        ),
+        vp = mapOf(
+            "a" to 3,
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testCompareBigDecimalLiteralDecimal() {
+    test(
+        exprStr = "a = 3.9",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3.9")
+        ),
+        value = true
+    )
+  }
+
 }
