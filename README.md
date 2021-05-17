@@ -18,7 +18,8 @@ _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr
 * Conjunction :     Whitespace+ ( 'and' | 'or' ) Whitespace+
 * Operator :        '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '='
 * Whitespace :      ' ' | '\t' | '\n'
-* LiteralValue :    Integer | Decimal | String | Regex | Boolean | Date | Time | DateTime
+* LiteralValue :    Null | Integer | Decimal | String | Regex | Boolean | Date | Time | DateTime
+* Null :            'null'
 * String :          '"' TextOrEmpty{" escaped by \} '"'
 * Regex :           '/' TextOrEmpty{/ escaped by \} '/'
 * Number :          '-'? Digit+ ( '.' Digit+ )?
