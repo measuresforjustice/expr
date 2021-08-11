@@ -142,7 +142,7 @@ interface ExValue {
 }
 class ExValueVar( private val type:ExDataType, private val name:String ): ExValue {
   override fun getType(): ExDataType = type
-  override fun getVariableName(): String? = name
+  override fun getVariableName(): String = name
   override fun getValue(vp: VarProvider):Any? = vp[name]
 
   override fun toString():String = name
@@ -172,7 +172,7 @@ class ExValueLit( private val type:ExDataType, private val value:Any? ): ExValue
       .replace( toEscape, "\\${toEscape}" )
 
 }
-class ExValueCompound( private val left:ExValue, private val op: ExMathOpType, private val right:ExValue): ExValue {
+class ExValueCompound( val left:ExValue, private val op: ExMathOpType, val right:ExValue): ExValue {
   init {
       if( left.getType() != ExDataType.NUMBER || right.getType() != ExDataType.NUMBER)
         throw IllegalArgumentException("Left and Right must be numbers")
@@ -190,11 +190,18 @@ class ExValueCompound( private val left:ExValue, private val op: ExMathOpType, p
     }
   }
 
-    override fun toString() = "$left$op$right"
+  override fun toString() = "$left $op $right"
 }
 
 class ExValueList( val values:List<ExValue> ): ExValue {
   override fun getType():ExDataType = ExDataType.LIST
   override fun getVariableName():String? = null
   override fun getValue(vp:VarProvider):List<Any?> = values.map { value -> value.getValue(vp) }
+  override fun toString():String = values.joinToString(
+      prefix = "[",
+      postfix = "]",
+      separator = ","
+  ) { v ->
+    v.toString()
+  }
 }

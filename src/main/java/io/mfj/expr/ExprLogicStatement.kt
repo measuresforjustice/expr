@@ -176,9 +176,9 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
   // that will parse to an identical expression
   override fun toString() : String {
     return if (not) {
-      "NOT( $left${op.symbol}$right )"
+      "NOT( $left ${op.symbol} $right )"
     } else {
-      "$left${op.symbol}$right"
+      "$left ${op.symbol} $right"
     }
   }
 
