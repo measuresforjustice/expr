@@ -909,4 +909,38 @@ class ExprTest {
     )
   }
 
+  @Test
+  fun testInNumberComp() {
+    // Make sure that if we use a Number that is not a BigDecimal, comparison still works
+    test(
+        exprStr = "a in [1]",
+        model = mapOf("a" to ExDataType.NUMBER),
+        vp = mapOf("a" to 1),
+        value = true
+    )
+    test(
+        exprStr = "1 in [a]",
+        model = mapOf("a" to ExDataType.NUMBER),
+        vp = mapOf("a" to 1),
+        value = true
+    )
+  }
+
+  @Test
+  fun testContainsNumberComp() {
+    // Make sure that if we use a Number that is not a BigDecimal, comparison still works
+    test(
+        exprStr = "[1] contains a",
+        model = mapOf("a" to ExDataType.NUMBER),
+        vp = mapOf("a" to 1),
+        value = true
+    )
+    test(
+        exprStr = "[a] contains 1",
+        model = mapOf("a" to ExDataType.NUMBER),
+        vp = mapOf("a" to 1),
+        value = true
+    )
+  }
+
 }
