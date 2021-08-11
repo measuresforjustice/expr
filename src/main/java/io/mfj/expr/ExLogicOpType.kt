@@ -32,6 +32,8 @@ enum class ExLogicOpType(vararg val symbols:String) {
   EQUAL("="),
   GREATER(">"),
   LESS("<"),
+  IN("in","IN"),
+  CONTAINS("contains","CONTAINS"),
   ;
 
   companion object {

@@ -14,9 +14,9 @@ _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr
 * Parens :          '(' Expression ')'
 * Not :             'not' Whitespace* '(' Expression ')'
 * Statement :       Value Operator Value ( Operator Value )?
-* Value :           VariableName | LiteralValue
+* Value :           VariableName | LiteralValue | List
 * Conjunction :     Whitespace+ ( 'and' | 'or' ) Whitespace+
-* Operator :        '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '='
+* Operator :        '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '=' | 'in' | 'contains'
 * Whitespace :      ' ' | '\t' | '\n'
 * LiteralValue :    Null | Integer | Decimal | String | Regex | Boolean | Date | Time | DateTime
 * Null :            'null'
@@ -28,6 +28,7 @@ _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr
 * Time :            "t'" ISO_8601_Time "'"
 * DateTime :        "dt'" ISO_8601_DateTime "'"
 * VariableName :    /[a-zA-Z_][a-zA-Z0-9_]*/
+* List:             '[' ( Value ( ',' Value )* ','? )? ']'
 ```
 
 ### What is up with the optional part of Statement?
@@ -45,6 +46,7 @@ It is awesome.
 * Time - `java.time.LocalTime`
 * DateTime - `java.time.LocalDateTime`
 * Boolean - `kotlin.Boolean`
+* List - `java.util.List`
 
 ## Versioning
 

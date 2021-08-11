@@ -34,6 +34,7 @@ object ExConvert {
         ExDataType.TIME -> anyToLocalTime(v)
         ExDataType.DATETIME -> anyToLocalDateTime(v)
         ExDataType.BOOLEAN -> anyToBoolean(v)
+        ExDataType.LIST -> throw IllegalArgumentException("Cannot convert ${v} to LIST")
       }
     } catch (e: Exception) {
       throw RuntimeException("Error converting \"$v\" to $dataType - ${e.message}", e )

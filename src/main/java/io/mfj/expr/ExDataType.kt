@@ -23,5 +23,6 @@ enum class ExDataType {
   DATE,
   TIME,
   DATETIME,
-  BOOLEAN
+  BOOLEAN,
+  LIST,
 }

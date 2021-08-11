@@ -130,7 +130,8 @@ open class ExprPegParser : BaseParser<Any>() {
   open fun Value() : Rule {
     return FirstOf(
         LiteralValue(), // first because of literal keywords (e.g.: null)
-        VariableName()
+        VariableName(),
+        ListValue(),
     )
   }
 
@@ -288,6 +289,31 @@ open class ExprPegParser : BaseParser<Any>() {
     )
   }
 
+  open fun ListValue(): Rule {
+    return Sequence(
+        "[",
+        push(ExList()),
+        ZeroOrMore(Whitespace()),
+        ListItem(),
+        ZeroOrMore(
+            ZeroOrMore(Whitespace()),
+            ",",
+            ZeroOrMore(Whitespace()),
+            ListItem(),
+        ),
+        Optional( "," ),
+        ZeroOrMore(Whitespace()),
+        "]",
+    )
+  }
+
+  open fun ListItem(): Rule {
+    return Sequence(
+        Value(),
+        ( peek(1) as ExList ).values.add( pop() as ExVal )
+    )
+  }
+
   open fun VariableName() : Rule {
     return Sequence(
       Letter(),
@@ -390,3 +416,4 @@ sealed class ExVal
 class ExLit( val type:ExDataType, val value:String? ): ExVal()
 class ExVar( val name:String ): ExVal()
 class ExCom( val left:ExVal, val op: ExMathOpType, val right: ExVal): ExVal()
+class ExList( val values:MutableList<ExVal> = mutableListOf()): ExVal()

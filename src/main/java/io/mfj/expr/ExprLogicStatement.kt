@@ -155,6 +155,16 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
         }
       }
       ExLogicOpType.NOT_EQUAL -> { leftVal != rightVal }
+      ExLogicOpType.IN -> {
+        val rightList = ( rightVal as? List<*> )
+            ?: throw IllegalArgumentException("right operand for ${ExLogicOpType.IN} must be a list")
+        rightList.contains(leftVal)
+      }
+      ExLogicOpType.CONTAINS -> {
+        val leftList = ( leftVal as? List<*> )
+            ?: throw IllegalArgumentException("left operand for ${ExLogicOpType.CONTAINS} must be a list")
+        leftList.contains(rightVal)
+      }
     }
   }
 

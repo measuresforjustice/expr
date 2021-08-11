@@ -119,6 +119,7 @@ class ExNode(val node_type: ExNodeType) {
             left = getExValue(v.left, model),
             op = v.op,
             right = getExValue(v.right, model))
+        is ExList -> ExValueList( v.values.map { value -> getExValue(value,model) } )
       }
 
   override fun toString() : String {
@@ -161,6 +162,7 @@ class ExValueLit( private val type:ExDataType, private val value:Any? ): ExValue
           ExDataType.TIME -> "t'${escape(value, "'")}'"
           ExDataType.DATETIME -> "dt'${escape(value, "'")}'"
           ExDataType.BOOLEAN -> value.toString()
+          ExDataType.LIST -> (value as List<*>).joinToString(prefix="[",separator=",",postfix="]")
         }
       } ?: "null"
 
@@ -189,4 +191,10 @@ class ExValueCompound( private val left:ExValue, private val op: ExMathOpType, p
   }
 
     override fun toString() = "$left$op$right"
+}
+
+class ExValueList( val values:List<ExValue> ): ExValue {
+  override fun getType():ExDataType = ExDataType.LIST
+  override fun getVariableName():String? = null
+  override fun getValue(vp:VarProvider):List<Any?> = values.map { value -> value.getValue(vp) }
 }

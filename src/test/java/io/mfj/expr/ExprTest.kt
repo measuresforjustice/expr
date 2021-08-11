@@ -9,7 +9,7 @@ You may obtain a copy of the License at
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KinD, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
@@ -669,6 +669,242 @@ class ExprTest {
         vp = mapOf(
             "a" to BigDecimal("3.9")
         ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testListTrailingComma() {
+    test(
+        exprStr = "[1,2] = [1,2,]",
+        model = emptyMap(),
+        vp = emptyMap(),
+        value = true
+    )
+  }
+
+  @Test
+  fun testIn() {
+    test(
+        exprStr = "a in [ 1, 2 ]",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("1")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testInUpper() {
+    test(
+        exprStr = "a IN [ 1, 2 ]",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("1")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testInNope() {
+    test(
+        exprStr = "a in [ 1, 2 ]",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3")
+        ),
+        value = false
+    )
+  }
+
+  @Test
+  fun testInVariable() {
+    test(
+        exprStr = "a in [ 1, b ]",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3"),
+            "b" to BigDecimal("3"),
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testInVariableNope() {
+    test(
+        exprStr = "a in [ 1, b ]",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("4"),
+            "b" to BigDecimal("3"),
+        ),
+        value = false
+    )
+  }
+
+  @Test
+  fun testListInList() {
+    test(
+        exprStr = "[1, 2] in [[1,2], 3]",
+        model = emptyMap(),
+        vp = emptyMap(),
+        value = true
+    )
+  }
+
+  @Test
+  fun testListInListNope() {
+    test(
+        exprStr = "[1, 2] in [[2,1], 3]",
+        model = emptyMap(),
+        vp = emptyMap(),
+        value = false
+    )
+  }
+
+  @Test
+  fun testListInListVariable() {
+    test(
+        exprStr = "[1, 2] in [a, 3]",
+        model = mapOf(
+            "a" to ExDataType.LIST
+        ),
+        vp = mapOf(
+            "a" to listOf(BigDecimal("1"),BigDecimal("2"))
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testContains() {
+    test(
+        exprStr = "[1,2] contains a",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("1")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testContainsUpper() {
+    test(
+        exprStr = "[1,2] CONTAINS a",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("1")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testContainsNope() {
+    test(
+        exprStr = "[1, 2] contains a",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3")
+        ),
+        value = false
+    )
+  }
+
+  @Test
+  fun testContainsVariable() {
+    test(
+        exprStr = "[1,b] contains a",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3"),
+            "b" to BigDecimal("3"),
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testContainsVariableNope() {
+    test(
+        exprStr = "[1,b] contains a",
+        model = mapOf(
+            "a" to ExDataType.NUMBER,
+            "b" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("4"),
+            "b" to BigDecimal("3"),
+        ),
+        value = false
+    )
+  }
+
+  @Test
+  fun testListContainsList() {
+    test(
+        exprStr = "[[1, 2], 3 ] contains [1,2]",
+        model = emptyMap(),
+        vp = emptyMap(),
+        value = true
+    )
+  }
+
+  @Test
+  fun testListContainsListNope() {
+    test(
+        exprStr = "[[1, 2],3 ] contains [2,1]",
+        model = emptyMap(),
+        vp = emptyMap(),
+        value = false
+    )
+  }
+
+  @Test
+  fun testListContainsListVariable() {
+    test(
+        exprStr = "[a, 3] contains [1, 2]",
+        model = mapOf(
+            "a" to ExDataType.LIST
+        ),
+        vp = mapOf(
+            "a" to listOf(BigDecimal("1"), BigDecimal("2"))
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testListMixedTypes() {
+    test(
+        exprStr = "[1,\"a\"] contains \"a\"",
+        model = emptyMap(),
+        vp = emptyMap(),
         value = true
     )
   }
