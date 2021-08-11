@@ -162,10 +162,24 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
           calc( leftVal, ExLogicOpType.EQUAL, v )
         }
       }
+      ExLogicOpType.NOT_IN -> {
+        val rightList = ( rightVal as? List<*> )
+            ?: throw IllegalArgumentException("right operand for ${ExLogicOpType.IN} must be a list")
+        rightList.none { v ->
+          calc( leftVal, ExLogicOpType.EQUAL, v )
+        }
+      }
       ExLogicOpType.CONTAINS -> {
         val leftList = ( leftVal as? List<*> )
             ?: throw IllegalArgumentException("left operand for ${ExLogicOpType.CONTAINS} must be a list")
         leftList.any { v ->
+          calc( rightVal, ExLogicOpType.EQUAL, v )
+        }
+      }
+      ExLogicOpType.NOT_CONTAINS -> {
+        val leftList = ( leftVal as? List<*> )
+            ?: throw IllegalArgumentException("left operand for ${ExLogicOpType.CONTAINS} must be a list")
+        leftList.none { v ->
           calc( rightVal, ExLogicOpType.EQUAL, v )
         }
       }
