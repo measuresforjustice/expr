@@ -16,7 +16,7 @@ _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr
 * Statement :       Value Operator Value ( Operator Value )?
 * Value :           VariableName | LiteralValue | List
 * Conjunction :     Whitespace+ ( 'and' | 'or' ) Whitespace+
-* Operator :        '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '=' | 'in' | 'contains'
+* Operator :        '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '=' | 'in' | '!in' | 'contains' | '!contains'
 * Whitespace :      ' ' | '\t' | '\n'
 * LiteralValue :    Null | Integer | Decimal | String | Regex | Boolean | Date | Time | DateTime
 * Null :            'null'

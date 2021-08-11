@@ -792,6 +792,48 @@ class ExprTest {
   }
 
   @Test
+  fun testNotIn() {
+    test(
+        exprStr = "a !in [ 1, 2 ]",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testNotInUpper() {
+    test(
+        exprStr = "a !IN [ 1, 2 ]",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testNotInNope() {
+    test(
+        exprStr = "a !in [ 1, 2 ]",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("1")
+        ),
+        value = false
+    )
+  }
+
+  @Test
   fun testContains() {
     test(
         exprStr = "[1,2] contains a",
@@ -940,6 +982,48 @@ class ExprTest {
         model = mapOf("a" to ExDataType.NUMBER),
         vp = mapOf("a" to 1),
         value = true
+    )
+  }
+
+  @Test
+  fun testNotContains() {
+    test(
+        exprStr = "[1,2] !contains a",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testNotContainsUpper() {
+    test(
+        exprStr = "[1,2] !CONTAINS a",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("3")
+        ),
+        value = true
+    )
+  }
+
+  @Test
+  fun testNotContainsNope() {
+    test(
+        exprStr = "[1, 2] !contains a",
+        model = mapOf(
+            "a" to ExDataType.NUMBER
+        ),
+        vp = mapOf(
+            "a" to BigDecimal("1")
+        ),
+        value = false
     )
   }
 
