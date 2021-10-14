@@ -6,13 +6,19 @@ term : statement | not | parens | bool;
 
 parens: '(' expression ')';
 
-not: 'not(' expression ')';
+not : NOT_START expression ')';
+NOT_START : NOT_P | NOT_SPACE_P;
+NOT_P : NOT'(';
+NOT_SPACE_P : NOT '(';
+NOT: [nN][oO][tT];
 
 statement : value OPERATOR value /*( operator value )?*/;
 
 value : varName | literalValue /*| list*/;
 
-CONJUNCTION: 'and' | 'or';
+CONJUNCTION: AND | OR;
+fragment AND : [aA][nN][dD];
+fragment OR : [oO][rR];
 
 OPERATOR : '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '=' /*| 'in' | '!in' | 'contains' | '!contains'*/;
 
