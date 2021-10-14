@@ -16,7 +16,7 @@ NOT: [nN][oO][tT];
 
 statement : value OPERATOR value ( OPERATOR value )?;
 
-value : varName | literalValue | list;
+value : value MATH_OP value | varName | literalValue | list;
 
 CONJUNCTION: AND | OR;
 fragment AND : [aA][nN][dD];
@@ -55,5 +55,7 @@ varName: VAR_NAME;
 VAR_NAME: [a-zA-Z_][a-zA-Z0-9_]*;
 
 list : '[' ( value ( ',' value )+ ','? )? ']';
+
+MATH_OP : '+' | '-';
 
 WS : [ \t\r\n]+ -> skip ;

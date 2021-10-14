@@ -75,7 +75,11 @@ object ExprParser {
 				return ctx.literalValue()?.v()
 						?: ctx.varName()?.v()
 						?: ctx.list()?.v()
-						?: error("should have found something")
+						?: ExCom(
+								left = ctx.value(0).v() as ExVal,
+								right = ctx.value(1).v() as ExVal,
+								op = ExMathOpType.fromSymbol( ctx.MATH_OP().text.uppercase() )
+						)
 			}
 
 			override fun visitVarName(ctx:VarNameContext):Any {
