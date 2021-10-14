@@ -128,6 +128,36 @@ public interface ExprListener extends ParseTreeListener {
 	 */
 	void exitBool(ExprParser.BoolContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ExprParser#date}.
+	 * @param ctx the parse tree
+	 */
+	void enterDate(ExprParser.DateContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#date}.
+	 * @param ctx the parse tree
+	 */
+	void exitDate(ExprParser.DateContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#time}.
+	 * @param ctx the parse tree
+	 */
+	void enterTime(ExprParser.TimeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#time}.
+	 * @param ctx the parse tree
+	 */
+	void exitTime(ExprParser.TimeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#datetime}.
+	 * @param ctx the parse tree
+	 */
+	void enterDatetime(ExprParser.DatetimeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#datetime}.
+	 * @param ctx the parse tree
+	 */
+	void exitDatetime(ExprParser.DatetimeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ExprParser#varName}.
 	 * @param ctx the parse tree
 	 */

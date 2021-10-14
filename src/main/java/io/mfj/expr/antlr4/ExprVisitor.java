@@ -83,6 +83,24 @@ public interface ExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBool(ExprParser.BoolContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ExprParser#date}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDate(ExprParser.DateContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ExprParser#time}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTime(ExprParser.TimeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ExprParser#datetime}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDatetime(ExprParser.DatetimeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ExprParser#varName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

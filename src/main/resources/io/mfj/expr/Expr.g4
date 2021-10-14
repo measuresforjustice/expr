@@ -22,7 +22,7 @@ fragment OR : [oO][rR];
 
 OPERATOR : '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '=' /*| 'in' | '!in' | 'contains' | '!contains'*/;
 
-literalValue : nul | number | string | bool | regex /*| DATE | TIME | DATE_TIME*/;
+literalValue : nul | number | string | bool | regex | date | time | datetime;
 
 nul: 'null';
 
@@ -40,6 +40,11 @@ DIGIT: [0-9];
 bool : TRUE | FALSE;
 TRUE: 'true';
 FALSE: 'false';
+
+date : 'd\'' (SQESC|.)*? '\'';
+time : 't\'' (SQESC|.)*? '\'';
+datetime: 'dt\'' (SQESC|.)*? '\'';
+fragment SQESC : '\\\'' | '\\\\';
 
 varName: VAR_NAME;
 VAR_NAME: [a-zA-Z_][a-zA-Z0-9_]*;

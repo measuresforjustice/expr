@@ -97,6 +97,30 @@ object ExprParser {
 								.replace("\\\\","\\")
 				)
 			}
+			override fun visitDate(ctx:DateContext):Any {
+				return ExLit(ExDataType.DATE,
+						ctx.text
+								.drop(2).dropLast(1)
+								.replace("\\'","'")
+								.replace("\\\\","\\")
+				)
+			}
+			override fun visitDatetime(ctx:DatetimeContext):Any {
+				return ExLit(ExDataType.DATETIME,
+						ctx.text
+								.drop(3).dropLast(1)
+								.replace("\\'","'")
+								.replace("\\\\","\\")
+				)
+			}
+			override fun visitTime(ctx:TimeContext):Any {
+				return ExLit(ExDataType.TIME,
+						ctx.text
+								.drop(2).dropLast(1)
+								.replace("\\'","'")
+								.replace("\\\\","\\")
+				)
+			}
 			override fun visitBool(ctx:BoolContext):Any {
 				return ExLit(ExDataType.BOOLEAN,ctx.text)
 			}
