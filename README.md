@@ -14,9 +14,11 @@ _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr
 * Parens :          '(' Expression ')'
 * Not :             'not' Whitespace* '(' Expression ')'
 * Statement :       Value Operator Value ( Operator Value )?
-* Value :           VariableName | LiteralValue | List
+* Value :           MathStatement | VariableName | LiteralValue | List
+* MathStatement :   Value MathOperator Value
 * Conjunction :     Whitespace+ ( 'and' | 'or' ) Whitespace+
 * Operator :        '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '=' | 'in' | '!in' | 'contains' | '!contains'
+* MathOperator :    '+' | '-'
 * Whitespace :      ' ' | '\t' | '\n'
 * LiteralValue :    Null | Integer | Decimal | String | Regex | Boolean | Date | Time | DateTime
 * Null :            'null'
@@ -30,6 +32,8 @@ _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr
 * VariableName :    /[a-zA-Z_][a-zA-Z0-9_]*/
 * List:             '[' ( Value ( ',' Value )* ','? )? ']'
 ```
+
+[ANTLR4 Grammar](src/main/resources/io/mfj/expr/Expr.g4)
 
 ### What is up with the optional part of Statement?
 

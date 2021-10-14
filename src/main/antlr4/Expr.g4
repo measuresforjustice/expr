@@ -1,5 +1,9 @@
 grammar Expr;
 
+@header {
+package io.mfj.expr.antlr4;
+}
+
 root : expression EOF;
 
 expression: term ( CONJUNCTION expression )?;

@@ -1,6 +1,7 @@
 package io.mfj.expr
 
-
+// These classes are in target/generated-sources/antlr4/
+// If they do not exist, `mvn generate-sources`. (`mvn install` will also do it.)
 import io.mfj.expr.antlr4.ExprBaseVisitor
 import io.mfj.expr.antlr4.ExprLexer
 import io.mfj.expr.antlr4.ExprParser as Antlr4ExprParser
