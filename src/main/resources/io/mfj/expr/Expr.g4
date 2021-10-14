@@ -46,10 +46,10 @@ bool : TRUE | FALSE;
 TRUE: 'true';
 FALSE: 'false';
 
-date : 'd\'' (SQESC|.)*? '\'';
-time : 't\'' (SQESC|.)*? '\'';
-datetime: 'dt\'' (SQESC|.)*? '\'';
-fragment SQESC : '\\\'' | '\\\\';
+date : 'd\'' (SQESC|':'|.)*? '\'';
+time : 't\'' (SQESC|':'|.)*? '\'';
+datetime: 'dt\'' (SQESC|':'|.)*? '\'';
+fragment SQESC: '\\\'' | '\\\\';
 
 varName: VAR_NAME;
 VAR_NAME: [a-zA-Z_][a-zA-Z0-9_]*;
