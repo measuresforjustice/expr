@@ -41,6 +41,18 @@ public interface ExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNot(ExprParser.NotContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ExprParser#notStart}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNotStart(ExprParser.NotStartContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ExprParser#notSpaceP}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNotSpaceP(ExprParser.NotSpacePContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ExprParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

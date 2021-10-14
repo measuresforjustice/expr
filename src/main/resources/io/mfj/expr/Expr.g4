@@ -4,14 +4,14 @@ root : expression EOF;
 
 expression: term ( CONJUNCTION expression )?;
 
-term : statement | not | parens | bool;
+term : statement | parens | not;
 
 parens: '(' expression ')';
 
-not : NOT_START expression ')';
-NOT_START : NOT_P | NOT_SPACE_P;
-NOT_P : NOT'(';
-NOT_SPACE_P : NOT '(';
+not : notStart expression ')';
+notStart : NOTP | notSpaceP;
+fragment NOTP : [nN][oO][tT]'(';
+notSpaceP : NOT '(';
 NOT: [nN][oO][tT];
 
 statement : value OPERATOR value ( OPERATOR value )?;

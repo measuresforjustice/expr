@@ -319,6 +319,12 @@ class ExprTest {
       true )
 
   @Test
+  fun t() {
+    test("not(1=1)", emptyMap(), emptyMap(),false)
+    test("not (1=1)", emptyMap(), emptyMap(),false)
+  }
+
+  @Test
   fun testWhitespace() = test(
       """
          1

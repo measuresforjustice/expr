@@ -58,6 +58,26 @@ public interface ExprListener extends ParseTreeListener {
 	 */
 	void exitNot(ExprParser.NotContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ExprParser#notStart}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotStart(ExprParser.NotStartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#notStart}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotStart(ExprParser.NotStartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#notSpaceP}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotSpaceP(ExprParser.NotSpacePContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#notSpaceP}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotSpaceP(ExprParser.NotSpacePContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ExprParser#statement}.
 	 * @param ctx the parse tree
 	 */
