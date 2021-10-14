@@ -19,10 +19,9 @@ object ExprParser {
 		val tokens = CommonTokenStream(lexer)
 		val parser = Antlr4ExprParser(tokens)
 		val tree = parser.root()
-		if ( ! parser.isMatchedEOF ) {
-			throw Exception("did not reach EOF")
-		}
-		print(tree)
+		if ( ! parser.isMatchedEOF ) throw Exception("did not reach EOF")
+
+		// walk [tree] to generate [ExNode].
 		return object:ExprBaseVisitor<Any>() {
 			fun ParseTree.v():Any = visit(this)
 
@@ -159,12 +158,4 @@ object ExprParser {
 		return parse(exp).toExpr(model)
 	}
 
-	private fun print(tree:ParseTree,indent:String="") {
-		println("${indent}${tree.text}")
-		tree.children.forEach { child ->
-			print(child,"${indent}  ")
-		}
-	}
-
-	private val ParseTree.children get() = (0 until childCount).map { getChild(it) }
 }
