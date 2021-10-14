@@ -27,7 +27,7 @@ object ExprParser {
 						.apply {
 							children.add( ctx.term().v() as ExNode )
 							if ( ctx.CONJUNCTION() != null ) {
-								conj_type = ExConjType.valueOf(ctx.CONJUNCTION().text.toUpperCase())
+								conj_type = ExConjType.valueOf(ctx.CONJUNCTION().text.uppercase())
 								children.add( ctx.expression().v() as ExNode )
 							} else {
 								conj_type = ExConjType.AND
@@ -67,6 +67,7 @@ object ExprParser {
 			override fun visitValue(ctx:ValueContext):Any {
 				return ctx.literalValue()?.v()
 						?: ctx.varName()?.v()
+						?: ctx.list()?.v()
 						?: error("should have found something")
 			}
 
@@ -125,6 +126,18 @@ object ExprParser {
 			}
 			override fun visitBool(ctx:BoolContext):Any {
 				return ExLit(ExDataType.BOOLEAN,ctx.text)
+			}
+
+			override fun visitList(ctx:ListContext):Any {
+				return ExList(
+						ctx.children
+								.drop(1).dropLast(1) // remove '[', ']'
+								.filterIndexed { i, child -> i % 2 == 0 } // omit commas
+								.map { child ->
+									child.v() as ExVal
+								}
+								.toMutableList()
+				)
 			}
 		}.visit(tree) as ExNode
 	}

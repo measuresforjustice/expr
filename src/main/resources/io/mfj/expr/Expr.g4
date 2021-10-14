@@ -14,13 +14,16 @@ NOT: [nN][oO][tT];
 
 statement : value OPERATOR value ( OPERATOR value )?;
 
-value : varName | literalValue /*| list*/;
+value : varName | literalValue | list;
 
 CONJUNCTION: AND | OR;
 fragment AND : [aA][nN][dD];
 fragment OR : [oO][rR];
 
-OPERATOR : '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '=' /*| 'in' | '!in' | 'contains' | '!contains'*/;
+OPERATOR : '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '=' | IN | CONTAINS ;
+
+fragment IN : '!'?[iI][nN];
+fragment CONTAINS: '!'?[cC][oO][nN][tT][aA][iI][nN][sS];
 
 literalValue : nul | number | string | bool | regex | date | time | datetime;
 
@@ -48,5 +51,7 @@ fragment SQESC : '\\\'' | '\\\\';
 
 varName: VAR_NAME;
 VAR_NAME: [a-zA-Z_][a-zA-Z0-9_]*;
+
+list : '[' ( value ( ',' value )+ ','? )? ']';
 
 WS : [ \t\r\n]+ -> skip ;
