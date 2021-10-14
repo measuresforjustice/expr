@@ -16,13 +16,15 @@ CONJUNCTION: 'and' | 'or';
 
 OPERATOR : '!=' | '<>' | '>=' | '<=' | '>' | '<' | '=~' | '=' /*| 'in' | '!in' | 'contains' | '!contains'*/;
 
-literalValue : nul | number | string | bool /* | regex | DATE | TIME | DATE_TIME*/;
+literalValue : nul | number | string | bool | regex /*| DATE | TIME | DATE_TIME*/;
 
 nul: 'null';
 
 string : '"' (ESC|.)*? '"';
+fragment ESC : '\\"' | '\\\\';
 
-ESC : '\\"' | '\\\\';
+regex : '/' (RESC|.)*? '/';
+fragment RESC : '\\/' | '\\\\';
 
 number: INT | DECIMAL;
 INT : '-'? DIGIT+;

@@ -98,6 +98,16 @@ public interface ExprListener extends ParseTreeListener {
 	 */
 	void exitString(ExprParser.StringContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ExprParser#regex}.
+	 * @param ctx the parse tree
+	 */
+	void enterRegex(ExprParser.RegexContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#regex}.
+	 * @param ctx the parse tree
+	 */
+	void exitRegex(ExprParser.RegexContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ExprParser#number}.
 	 * @param ctx the parse tree
 	 */

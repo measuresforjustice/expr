@@ -89,6 +89,14 @@ object ExprParser {
 								.replace("\\\\","\\")
 				)
 			}
+			override fun visitRegex(ctx:RegexContext):Any {
+				return ExLit(ExDataType.REGEX,
+						ctx.text
+								.drop(1).dropLast(1) // remove quotes
+								.replace("\\/","/")
+								.replace("\\\\","\\")
+				)
+			}
 			override fun visitBool(ctx:BoolContext):Any {
 				return ExLit(ExDataType.BOOLEAN,ctx.text)
 			}

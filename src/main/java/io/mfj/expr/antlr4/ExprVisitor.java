@@ -65,6 +65,12 @@ public interface ExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitString(ExprParser.StringContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ExprParser#regex}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRegex(ExprParser.RegexContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ExprParser#number}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
