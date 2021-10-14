@@ -12,7 +12,7 @@ NOT_P : NOT'(';
 NOT_SPACE_P : NOT '(';
 NOT: [nN][oO][tT];
 
-statement : value OPERATOR value /*( operator value )?*/;
+statement : value OPERATOR value ( OPERATOR value )?;
 
 value : varName | literalValue /*| list*/;
 

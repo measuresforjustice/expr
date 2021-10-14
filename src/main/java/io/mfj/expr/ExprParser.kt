@@ -56,9 +56,11 @@ object ExprParser {
 			override fun visitStatement(ctx:StatementContext):Any {
 				return ExNode(ExNodeType.LOGIC_STATEMENT)
 						.apply {
-							left = ctx.getChild(0).v() as ExVal
-							op = ctx.getChild(1).text
-							right = ctx.getChild(2).v() as ExVal
+							left = ctx.value(0).v() as ExVal
+							op = ctx.OPERATOR(0).text
+							right = ctx.value(1).v() as ExVal
+							op2 = ctx.OPERATOR(1)?.text
+							right2 = ctx.value(2)?.v() as ExVal?
 						}
 			}
 
