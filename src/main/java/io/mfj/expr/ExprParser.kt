@@ -17,10 +17,17 @@ object ExprParser {
 		val lexer = ExprLexer(input)
 		val tokens = CommonTokenStream(lexer)
 		val parser = Antlr4ExprParser(tokens)
-		val tree = parser.expression()
+		val tree = parser.root()
+		if ( ! parser.isMatchedEOF ) {
+			throw Exception("did not reach EOF")
+		}
 		print(tree)
 		return object:ExprBaseVisitor<Any>() {
 			fun ParseTree.v():Any = visit(this)
+
+			override fun visitRoot(ctx:RootContext):Any {
+				return ctx.children.first().v()
+			}
 
 			override fun visitExpression(ctx:ExpressionContext):ExNode {
 				return ExNode(ExNodeType.CONJUNCTION)

@@ -1,5 +1,7 @@
 grammar Expr;
 
+root : expression EOF;
+
 expression: term ( CONJUNCTION expression )?;
 
 term : statement | not | parens | bool;

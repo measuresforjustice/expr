@@ -59,6 +59,14 @@ class ExprTest {
   }
 
   @Test
+  fun test0() = test(
+      "1=1",
+      emptyMap(),
+      emptyMap(),
+      true
+  )
+
+  @Test
   fun test1() = test(
       "NOT(aa=0 AND bb=1 AND cc=2)",
       mapOf(
