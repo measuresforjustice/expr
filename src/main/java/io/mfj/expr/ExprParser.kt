@@ -120,7 +120,6 @@ object ExprParser {
 				)
 			}
 			override fun visitDatetime(ctx:DatetimeContext):Any {
-				val text = ctx.text
 				return ExLit(ExDataType.DATETIME,
 						ctx.text
 								.drop(3).dropLast(1)
