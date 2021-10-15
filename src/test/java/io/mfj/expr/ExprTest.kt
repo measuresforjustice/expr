@@ -16,7 +16,7 @@ limitations under the License.
 
 package io.mfj.expr
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -712,6 +712,20 @@ class ExprTest {
   }
 
   @Test
+  fun testInSingletonList() {
+      test(
+          exprStr = "a in [ 1 ]",
+          model = mapOf(
+              "a" to ExDataType.NUMBER
+          ),
+          vp = mapOf(
+              "a" to BigDecimal("1")
+          ),
+          value = true
+      )
+  }
+
+  @Test
   fun testInUpper() {
     test(
         exprStr = "a IN [ 1, 2 ]",
@@ -738,6 +752,20 @@ class ExprTest {
         value = false
     )
   }
+
+    @Test
+    fun testInEmptyListNope() {
+        test(
+            exprStr = "a in []",
+            model = mapOf(
+                "a" to ExDataType.NUMBER
+            ),
+            vp = mapOf(
+                "a" to BigDecimal("3")
+            ),
+            value = false
+        )
+    }
 
   @Test
   fun testInVariable() {
@@ -818,6 +846,20 @@ class ExprTest {
         value = true
     )
   }
+
+    @Test
+    fun testNotInEmptyList() {
+        test(
+            exprStr = "a !in []",
+            model = mapOf(
+                "a" to ExDataType.NUMBER
+            ),
+            vp = mapOf(
+                "a" to BigDecimal("3")
+            ),
+            value = true
+        )
+    }
 
   @Test
   fun testNotInUpper() {
