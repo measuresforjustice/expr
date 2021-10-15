@@ -43,7 +43,7 @@ It is awesome.
 
 ## Variable types
 
-* STRING - `kotlin.String`
+* String - `kotlin.String`
 * Regex - `kotlin.text.Regex`
 * Number - `java.math.BigDecimal`
 * Date - `java.time.LocalDate`
