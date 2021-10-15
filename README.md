@@ -33,7 +33,7 @@ _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr
 * List:             '[' ( Value ( ',' Value )* ','? )? ']'
 ```
 
-[ANTLR4 Grammar](src/main/resources/io/mfj/expr/Expr.g4)
+[ANTLR4 Grammar](src/main/antlr4/Expr.g4)
 
 ### What is up with the optional part of Statement?
 
