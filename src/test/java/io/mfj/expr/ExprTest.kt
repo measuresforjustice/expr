@@ -1041,4 +1041,32 @@ class ExprTest {
     )
   }
 
+  /**
+   * Tests that regexes work with ^ and $.
+   */
+  @Test
+  fun testRegexStartEnd() {
+    test(
+        exprStr = "text =~ /^DATE:.*/",
+        model = mapOf("text" to ExDataType.STRING),
+        vp = mapOf("text" to "DATE: today"),
+        value = true
+    )
+  }
+
+  /**
+   * Tests that ANTLR glob captures "*".
+   *
+   * This would fail if the antlr grammar used rules where it should be using tokens.
+   */
+  @Test
+  fun testStringAsterisk() {
+    test(
+        exprStr = "text = \"*\"",
+        model = mapOf("text" to ExDataType.STRING),
+        vp = mapOf("text" to "*"),
+        value = true
+    )
+  }
+
 }

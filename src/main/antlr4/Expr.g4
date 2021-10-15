@@ -14,7 +14,7 @@ parens: '(' expression ')';
 
 not : notStart expression ')';
 notStart : NOTP | notSpaceP;
-fragment NOTP : [nN][oO][tT]'(';
+NOTP : [nN][oO][tT]'(';
 notSpaceP : NOT '(';
 NOT: [nN][oO][tT];
 
@@ -35,11 +35,13 @@ literalValue : nul | number | string | bool | regex | date | time | datetime;
 
 nul: 'null';
 
-string : '"' (ESC|.)*? '"';
-fragment ESC : '\\"' | '\\\\';
+string : DQUOTED;
+DQUOTED: '"' (DQUOTED_ESC|.)*? '"';
+fragment DQUOTED_ESC : '\\"' | '\\\\';
 
-regex : '/' (RESC|.)*? '/';
-fragment RESC : '\\/' | '\\\\';
+regex : SLASHED;
+SLASHED: '/' (SLASHED_ESC|.)*? '/';
+fragment SLASHED_ESC: '\\/' | '\\\\';
 
 number: INT | DECIMAL;
 INT : '-'? DIGIT+;
@@ -50,10 +52,14 @@ bool : TRUE | FALSE;
 TRUE: 'true';
 FALSE: 'false';
 
-date : 'd\'' (SQESC|':'|.)*? '\'';
-time : 't\'' (SQESC|':'|.)*? '\'';
-datetime: 'dt\'' (SQESC|':'|.)*? '\'';
-fragment SQESC: '\\\'' | '\\\\';
+date: DATEQUOTED;
+DATEQUOTED: 'd' SQUOTED;
+time: TIMEQUOTED;
+TIMEQUOTED: 't' SQUOTED;
+datetime: DATETIMEQUOTED;
+DATETIMEQUOTED: 'dt' SQUOTED;
+fragment SQUOTED: '\'' (SQUOTED_ESC|.)*? '\'';
+fragment SQUOTED_ESC : '\\\'' | '\\\\';
 
 varName: VAR_NAME;
 VAR_NAME: [a-zA-Z_][a-zA-Z0-9_]*;
