@@ -6,6 +6,8 @@ _Expr_ is released under the [Apache License 2.0](https://www.apache.org/license
 
 _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr/) with GAV `io.mfj:expr`.
 
+_Expr_ requires Java 11+.
+
 ## The grammar:
 
 ```
