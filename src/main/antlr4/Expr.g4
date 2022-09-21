@@ -78,7 +78,7 @@ fragment SQUOTED: '\'' (SQUOTED_ESC|.)*? '\'';
 fragment SQUOTED_ESC : '\\\'' | '\\\\';
 
 varName: VAR_NAME;
-VAR_NAME: [a-zA-Z_][a-zA-Z0-9_.]*;
+VAR_NAME: [a-zA-Z_][a-zA-Z0-9_\\.]*;
 
 list : '[' ( value ( ',' value )+ ','? )? ']';
 
