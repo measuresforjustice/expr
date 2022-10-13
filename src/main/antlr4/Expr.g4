@@ -49,7 +49,8 @@ fragment CONTAINS: '!'?[cC][oO][nN][tT][aA][iI][nN][sS];
 
 literalValue : nul | number | string | bool | regex | date | time | datetime;
 
-nul: 'null';
+nul: NUL;
+NUL: [nN][uU][lL][lL];
 
 string : DQUOTED;
 DQUOTED: '"' (DQUOTED_ESC|.)*? '"';

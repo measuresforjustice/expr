@@ -277,6 +277,18 @@ class ExprTest {
       true )
 
   @Test
+  fun testNullTitleCase() = test(
+      "ss = Null",
+      mapOf( "ss" to null ),
+      true )
+
+  @Test
+  fun testNullUpperCase() = test(
+      "ss = NULL",
+      mapOf( "ss" to null ),
+      true )
+
+  @Test
   fun test33() = test(
       "ss = null",
       mapOf( "ss" to "a" ),
