@@ -154,7 +154,13 @@ class ExprLogicStatement(val left: ExValue, var op: ExLogicOpType, val right:ExV
           }
         }
       }
-      ExLogicOpType.NOT_EQUAL -> { leftVal != rightVal }
+      ExLogicOpType.NOT_EQUAL -> {
+        if ( leftVal is Number && rightVal is Number ) {
+          leftVal.asBigDecimal().compareTo( rightVal.asBigDecimal() ) != 0
+        } else {
+          leftVal != rightVal
+        }
+      }
       ExLogicOpType.IN -> {
         val rightList = ( rightVal as? List<*> )
             ?: throw IllegalArgumentException("right operand for ${ExLogicOpType.IN} must be a list")
