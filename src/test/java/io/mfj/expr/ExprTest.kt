@@ -67,6 +67,40 @@ class ExprTest {
   )
 
   @Test
+  fun testNotEqualDistinctNumericLiterals() = test(
+      "2!=1",
+      emptyMap(),
+      emptyMap(),
+      true
+  )
+
+  @Test
+  fun testNotEqualMatchingNumericLiterals() = test(
+      "1<>1",
+      emptyMap(),
+      emptyMap(),
+      false
+  )
+
+  @Test
+  fun testNotEqualDistinctVarAndLiteral() = test(
+      "two<>1",
+      mapOf(
+          "two" to 2
+      ),
+      true
+  )
+
+  @Test
+  fun testNotEqualMatchingVarAndLiteral() = test(
+      "one!=1",
+      mapOf(
+          "one" to 1
+      ),
+      false
+  )
+
+  @Test
   fun test1() = test(
       "NOT(aa=0 AND bb=1 AND cc=2)",
       mapOf(
@@ -253,10 +287,22 @@ class ExprTest {
       true )
 
   @Test
+  fun test26NotEq() = test(
+      "1.0 != aa",
+      mapOf( "aa" to 1 ),
+      false )
+
+  @Test
   fun test27() = test(
       "1 = ddd",
       mapOf( "ddd" to 1.0 ),
       true )
+
+  @Test
+  fun test27NotEq() = test(
+      "1 != ddd",
+      mapOf( "ddd" to 1.0 ),
+      false )
 
   @Test
   fun testFloatEq() = test(
@@ -265,10 +311,22 @@ class ExprTest {
       true )
 
   @Test
+  fun testFloatNotEq() = test(
+      "1.0 <> ddd",
+      mapOf( "ddd" to 1.0f ),
+      false )
+
+  @Test
   fun testDoubleEq() = test(
       "1.0 = ddd",
       mapOf( "ddd" to 1.0 ),
       true )
+
+  @Test
+  fun testDoubleNotEq() = test(
+      "1.0 != ddd",
+      mapOf( "ddd" to 1.0 ),
+      false )
 
   @Test
   fun test28() = test(
