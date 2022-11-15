@@ -1181,4 +1181,19 @@ class ExprTest {
     )
   }
 
+  @Test
+  fun testMixedGroupedConjunctions() = test(
+      "0=1 OR (1=0 AND 1=1)",
+      mapOf(),
+      false
+  )
+
+  @Test
+  fun testMixedUngroupedConjunctions() = test(
+      // "false OR false AND true" should eval to false regardless of AND/OR precedence
+      "0=1 OR 1=0 AND 1=1",
+      mapOf(),
+      false
+  )
+
 }
