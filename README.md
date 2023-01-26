@@ -2,6 +2,13 @@
 
 Expr is a handy expression parser.
 
+It supports writing logical expressions as strings and evaluating them against data records (for example,
+rows from a CSV file or database query).
+
+[Measures for Justice](https://measuresforjustice.org) developed _Expr_ to provide a simple format for
+data researchers and developers to collaborate on data matching logic without needing to tie it to the
+language of a specific target engine (such as R or Java).
+
 _Expr_ is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 _Expr_ is deployed to [Maven Central](https://repo1.maven.org/maven2/io/mfj/expr/) with GAV `io.mfj:expr`.
