@@ -140,14 +140,14 @@ interface ExValue {
   fun isVariable():Boolean = getVariableName() != null
   fun isLiteral():Boolean = getVariableName() == null
 }
-class ExValueVar( private val type:ExDataType, private val name:String ): ExValue {
+class ExValueVar( private val type:ExDataType, val name:String ): ExValue {
   override fun getType(): ExDataType = type
   override fun getVariableName(): String = name
   override fun getValue(vp: VarProvider):Any? = vp[name]
 
   override fun toString():String = name
 }
-class ExValueLit( private val type:ExDataType, private val value:Any? ): ExValue {
+class ExValueLit( private val type:ExDataType, val value:Any? ): ExValue {
   override fun getType(): ExDataType = type
   override fun getVariableName(): String? = null
   override fun getValue(vp: VarProvider):Any? = value
@@ -172,7 +172,7 @@ class ExValueLit( private val type:ExDataType, private val value:Any? ): ExValue
       .replace( toEscape, "\\${toEscape}" )
 
 }
-class ExValueCompound( val left:ExValue, private val op: ExMathOpType, val right:ExValue): ExValue {
+class ExValueCompound( val left:ExValue, val op: ExMathOpType, val right:ExValue ): ExValue {
   init {
       if( left.getType() != ExDataType.NUMBER || right.getType() != ExDataType.NUMBER)
         throw IllegalArgumentException("Left and Right must be numbers")
