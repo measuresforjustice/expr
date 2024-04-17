@@ -140,6 +140,13 @@ class SqlUtilTest {
     "aNumber >= 3"
   )
 
+  @Test
+  fun testBetween() = test(
+    "1 < aNumber <= 6",
+    model,
+    "(1 < aNumber AND aNumber <= 6)"
+  )
+
   // ----- conjunctions -----
 
   @Test
