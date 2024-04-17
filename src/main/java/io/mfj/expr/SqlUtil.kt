@@ -21,7 +21,11 @@ object SqlUtil {
       if (conjunction.not) {
         "NOT ($joined)"
       } else {
-        "($joined)"
+        if (conjunction.params.size > 1) {
+          "($joined)"
+        } else {
+          joined
+        }
       }
     }
   }

@@ -28,42 +28,42 @@ class SqlUtilTest {
   fun testStringMatch() = test(
     """aString="abc"""",
     model,
-    "(aString = 'abc')"
+    "aString = 'abc'"
   )
 
   @Test
   fun testNumberMatch() = test(
     "aNumber = 1",
     model,
-    "(aNumber = 1)"
+    "aNumber = 1"
   )
 
   @Test
   fun testBooleanMatch() = test(
     "aBoolean = true",
     model,
-    "(aBoolean = TRUE)"
+    "aBoolean = TRUE"
   )
 
   @Test
   fun testDateMatch() = test(
     "aDate = d'2020-02-25'",
     model,
-    "(aDate = '2020-02-25')"
+    "aDate = '2020-02-25'"
   )
 
   @Test
   fun testTimeMatch() = test(
     "aTime = t'20:22:33'",
     model,
-    "(aTime = '20:22:33')"
+    "aTime = '20:22:33'"
   )
 
   @Test
   fun testDateTimeMatch() = test(
     "aDateTime = dt'2024-04-14T14:04:44'",
     model,
-    "(aDateTime = '2024-04-14 14:04:44')"
+    "aDateTime = '2024-04-14 14:04:44'"
   )
 
   // ----- advanced value matching -----
@@ -72,35 +72,35 @@ class SqlUtilTest {
   fun testRegexMatch() = test(
     "aString =~ /a.b/",
     model,
-    "(aString ~ 'a.b')"
+    "aString ~ 'a.b'"
   )
 
   @Test
   fun testIn() = test(
     "aNumber in [1, 2, 3, 5, 8, 13]",
     model,
-    "(aNumber IN (1, 2, 3, 5, 8, 13))"
+    "aNumber IN (1, 2, 3, 5, 8, 13)"
   )
 
   @Test
   fun testNotIn() = test(
     "aNumber !in [1, 2, 3, 5, 8, 13]",
     model,
-    "(aNumber NOT IN (1, 2, 3, 5, 8, 13))"
+    "aNumber NOT IN (1, 2, 3, 5, 8, 13)"
   )
 
   @Test
   fun testContains() = test(
     "[1, 2] contains aNumber",
     model,
-    "(aNumber IN (1, 2))"
+    "aNumber IN (1, 2)"
   )
 
   @Test
   fun testNotContains() = test(
     "[1, 2] !contains aNumber",
     model,
-    "(aNumber NOT IN (1, 2))"
+    "aNumber NOT IN (1, 2)"
   )
 
   // ----- other comparison operators -----
@@ -109,35 +109,35 @@ class SqlUtilTest {
   fun testNotEquals() = test(
     "aNumber != 0",
     model,
-    "(aNumber <> 0)"
+    "aNumber <> 0"
   )
 
   @Test
   fun testLessThan() = test(
     "aDate < d'2020-02-25'",
     model,
-    "(aDate < '2020-02-25')"
+    "aDate < '2020-02-25'"
   )
 
   @Test
   fun testGreaterThan() = test(
     "aTime > t'04:44:14'",
     model,
-    "(aTime > '04:44:14')"
+    "aTime > '04:44:14'"
   )
 
   @Test
   fun testLessThanOrEqual() = test(
     "aNumber <= 3",
     model,
-    "(aNumber <= 3)"
+    "aNumber <= 3"
   )
 
   @Test
   fun testGreaterThanOrEqual() = test(
     "aNumber >= 3",
     model,
-    "(aNumber >= 3)"
+    "aNumber >= 3"
   )
 
   // ----- conjunctions -----
@@ -146,17 +146,16 @@ class SqlUtilTest {
   fun testAnd() = test(
     "aString = \"foo\" and aNumber = 2" ,
     model,
-    "(aString = 'foo' AND (aNumber = 2))"
+    "(aString = 'foo' AND aNumber = 2)"
   )
 
   @Test
   fun testOr() = test(
     "aNumber = 1 or aNumber = 2" ,
     model,
-    "(aNumber = 1 OR (aNumber = 2))"
+    "(aNumber = 1 OR aNumber = 2)"
   )
 
-  // TODO simple conjunctions
   // TODO inverted statements (not)
   // TODO math statements
   // TODO nulls
