@@ -102,4 +102,64 @@ class SqlUtilTest {
     model,
     "(aNumber NOT IN (1, 2))"
   )
+
+  // ----- other comparison operators -----
+
+  @Test
+  fun testNotEquals() = test(
+    "aNumber != 0",
+    model,
+    "(aNumber <> 0)"
+  )
+
+  @Test
+  fun testLessThan() = test(
+    "aDate < d'2020-02-25'",
+    model,
+    "(aDate < '2020-02-25')"
+  )
+
+  @Test
+  fun testGreaterThan() = test(
+    "aTime > t'04:44:14'",
+    model,
+    "(aTime > '04:44:14')"
+  )
+
+  @Test
+  fun testLessThanOrEqual() = test(
+    "aNumber <= 3",
+    model,
+    "(aNumber <= 3)"
+  )
+
+  @Test
+  fun testGreaterThanOrEqual() = test(
+    "aNumber >= 3",
+    model,
+    "(aNumber >= 3)"
+  )
+
+  // ----- conjunctions -----
+
+  @Test
+  fun testAnd() = test(
+    "aString = \"foo\" and aNumber = 2" ,
+    model,
+    "(aString = 'foo' AND (aNumber = 2))"
+  )
+
+  @Test
+  fun testOr() = test(
+    "aNumber = 1 or aNumber = 2" ,
+    model,
+    "(aNumber = 1 OR (aNumber = 2))"
+  )
+
+  // TODO simple conjunctions
+  // TODO inverted statements (not)
+  // TODO math statements
+  // TODO nulls
+  // TODO complex nested expression with parens, not, multiple operators, etc.
+  // TODO operand type validity checks
 }
