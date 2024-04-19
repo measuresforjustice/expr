@@ -79,7 +79,7 @@ object SqlUtil {
         } else if (statement.left is ExValueLit && statement.left.value == null) {
           "${toSql(statement.right)} IS NOT NULL"
         } else {
-          "${toSql(statement.left)} = ${toSql(statement.right)}"
+          "${toSql(statement.left)} <> ${toSql(statement.right)}"
         }
       }
       else -> {
