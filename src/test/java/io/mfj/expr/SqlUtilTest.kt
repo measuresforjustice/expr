@@ -167,8 +167,19 @@ class SqlUtilTest {
   fun testMultiConjunction() = test(
     "aNumber = 1 or aNumber = 2 and aString = \"foo\"",
     model,
-    expected = "(aNumber = 1 OR (aNumber = 2 AND aString = 'foo'))"
+    "(aNumber = 1 OR (aNumber = 2 AND aString = 'foo'))"
   )
+
+  @Test
+  fun testMultiConjunctionCustomPrecedence() = test(
+    "( aNumber = 1 or aNumber = 2 ) and aString = \"foo\"",
+    model,
+    "((aNumber = 1 OR aNumber = 2) AND aString = 'foo')"
+  )
+
+  // ----- inverted statements -----
+
+
 
   // TODO inverted statements (not)
   // TODO math statements
