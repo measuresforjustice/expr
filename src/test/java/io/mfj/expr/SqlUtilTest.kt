@@ -177,11 +177,36 @@ class SqlUtilTest {
     "((aNumber = 1 OR aNumber = 2) AND aString = 'foo')"
   )
 
-  // ----- inverted statements -----
+  // ----- negated statements -----
 
+  @Test
+  fun testNegatedLogic() = test(
+    "not (aString > \"a\")",
+    model,
+    "NOT (aString > 'a')"
+  )
 
+  @Test
+  fun testNegatedConjunction() = test(
+    "not(aNumber = 1 or aNumber = 2)",
+    model,
+    "NOT (aNumber = 1 OR aNumber = 2)"
+  )
 
-  // TODO inverted statements (not)
+  @Test
+  fun testNegatedNotLogic() = test(
+    "not (aString !in [\"foo\", \"bar\"])",
+    model,
+    "NOT (aString NOT IN ('foo', 'bar'))"
+  )
+
+  @Test
+  fun testDoubleNegation() = test(
+    "not (NOT (aNumber < 10))",
+    model,
+    "NOT (NOT (aNumber < 10))"
+  )
+
   // TODO math statements
   // TODO nulls (looks like they can be used with equal, not equal, and in/contains)
   // TODO complex nested expression with parens, not, multiple operators, etc.
