@@ -69,8 +69,15 @@ class SqlUtilTest {
   // ----- advanced value matching -----
 
   @Test
-  fun testRegexMatch() = test(
+  fun testRegexMatchWithRegexLiteral() = test(
     "aString =~ /a.b/",
+    model,
+    "aString ~ 'a.b'"
+  )
+
+  @Test
+  fun testRegexMatchWithStringLiteral() = test(
+    "aString =~ \"a.b\"",
     model,
     "aString ~ 'a.b'"
   )
