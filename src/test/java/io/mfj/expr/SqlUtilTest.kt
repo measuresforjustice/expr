@@ -163,9 +163,16 @@ class SqlUtilTest {
     "(aNumber = 1 OR aNumber = 2)"
   )
 
+  @Test
+  fun testMultiConjunction() = test(
+    "aNumber = 1 or aNumber = 2 and aString = \"foo\"",
+    model,
+    expected = "(aNumber = 1 OR (aNumber = 2 AND aString = 'foo'))"
+  )
+
   // TODO inverted statements (not)
   // TODO math statements
-  // TODO nulls
+  // TODO nulls (looks like they can be used with equal, not equal, and in/contains)
   // TODO complex nested expression with parens, not, multiple operators, etc.
   // TODO operand type validity checks
 }
