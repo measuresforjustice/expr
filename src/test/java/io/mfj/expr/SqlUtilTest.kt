@@ -304,5 +304,63 @@ class SqlUtilTest {
     "aString ~ anotherString" // INVALID
   )
 
+  @Test(expected=IllegalArgumentException::class)
+  fun testGreaterWithMismatchedOperands() = test(
+    "aNumber > aDate",
+    model,
+    "aNumber > aDate" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testGreaterWithInvalidOperandType() = test(
+    "aBoolean > anotherBoolean",
+    model.plus("anotherBoolean" to ExDataType.BOOLEAN),
+    "aBoolean > anotherBoolean" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testGreaterOrEqualWithMismatchedOperands() = test(
+    "aString >= aDate",
+    model,
+    "aString >= aDate" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testGreaterOrEqualWithInvalidOperandType() = test(
+    "aNumber >= /a.b/",
+    model,
+    "aNumber >= 'a.b'" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testLessWithMismatchedOperands() = test(
+    "aDate < aDateTime",
+    model,
+    "aDate < aDateTime" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testLessWithInvalidOperandType() = test(
+    "[1, 2] < [2, 1]",
+    model,
+    "(1, 2) < (2, 1)" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testLessEqualWithMismatchedOperands() = test(
+    "aTime <= 5",
+    model,
+    "aTime <= 5" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testLessEqualWithInvalidOperandType() = test(
+    "aBoolean <= false",
+    model,
+    "aBoolean <= FALSE" // INVALID
+  )
+
+  // TODO including a null literal in a list (i.e. for IN / NOT IN) should throw - NULL is not a value in SQL
+
   // TODO a big complex nested expression with parens, not, multiple operators, etc.
 }

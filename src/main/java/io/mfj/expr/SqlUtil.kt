@@ -83,7 +83,11 @@ object SqlUtil {
           "${toSql(statement.left)} <> ${toSql(statement.right)}"
         }
       }
-      else -> {
+      ExLogicOpType.GREATER,
+      ExLogicOpType.GREATER_EQUAL,
+      ExLogicOpType.LESS,
+      ExLogicOpType.LESS_EQUAL -> {
+        validateGreaterOrLessOperands(statement.left, statement.right)
         "${toSql(statement.left)} ${statement.op.symbol} ${toSql(statement.right)}"
       }
     }.let { stmt ->
@@ -130,6 +134,22 @@ object SqlUtil {
         }
       }
       else -> error("Unexpected value type ${value.javaClass}")
+    }
+  }
+
+  private fun validateGreaterOrLessOperands(left: ExValue, right: ExValue) {
+    if (left.getType() != right.getType()) {
+      throw IllegalArgumentException("greater/less than operands must be of matching types")
+    }
+
+    if (!setOf(
+      ExDataType.STRING,
+      ExDataType.NUMBER,
+      ExDataType.DATE,
+      ExDataType.TIME,
+      ExDataType.DATETIME
+    ).contains(left.getType())) {
+      throw IllegalArgumentException("operands for greater/less than must be string, number or date/time")
     }
   }
 }
