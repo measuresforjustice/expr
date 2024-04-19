@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class SqlUtilTest {
-  val model = mapOf(
+  private val model = mapOf(
       "aString" to ExDataType.STRING,
       "aNumber" to ExDataType.NUMBER,
       "aDate" to ExDataType.DATE,
@@ -223,7 +223,43 @@ class SqlUtilTest {
     "5 - aNumber >= anotherNumber"
   )
 
-  // TODO nulls (looks like they can be used with equal, not equal, and in/contains)
-  // TODO complex nested expression with parens, not, multiple operators, etc.
+  // ----- nulls -----
+
+  @Test
+  fun testStringEqualsNull() = test(
+    "aString = null",
+    model,
+    "aString IS NULL"
+  )
+
+  @Test
+  fun testNullEqualsString() = test(
+    "null = aString",
+    model,
+    "aString IS NULL"
+  )
+
+  @Test
+  fun testStringNotEqualsNull() = test(
+    "aString != null",
+    model,
+    "aString IS NOT NULL"
+  )
+
+  @Test
+  fun testNullNotEqualsString() = test(
+    "null != aString",
+    model,
+    "aString IS NOT NULL"
+  )
+
+  @Test
+  fun testDateEqualsNull() = test(
+    "aDate = null",
+    model,
+    "aDate IS NULL"
+  )
+
   // TODO operand type validity checks
+  // TODO a big complex nested expression with parens, not, multiple operators, etc.
 }

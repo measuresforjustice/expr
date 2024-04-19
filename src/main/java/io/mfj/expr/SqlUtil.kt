@@ -64,6 +64,24 @@ object SqlUtil {
         val joinedList = leftList.values.joinToString { toSql(it) }
         "${toSql(statement.right)} NOT IN ($joinedList)"
       }
+      ExLogicOpType.EQUAL -> {
+        if (statement.right is ExValueLit && statement.right.value == null) {
+          "${toSql(statement.left)} IS NULL"
+        } else if (statement.left is ExValueLit && statement.left.value == null) {
+          "${toSql(statement.right)} IS NULL"
+        } else {
+          "${toSql(statement.left)} = ${toSql(statement.right)}"
+        }
+      }
+      ExLogicOpType.NOT_EQUAL -> {
+        if (statement.right is ExValueLit && statement.right.value == null) {
+          "${toSql(statement.left)} IS NOT NULL"
+        } else if (statement.left is ExValueLit && statement.left.value == null) {
+          "${toSql(statement.right)} IS NOT NULL"
+        } else {
+          "${toSql(statement.left)} = ${toSql(statement.right)}"
+        }
+      }
       else -> {
         "${toSql(statement.left)} ${statement.op.symbol} ${toSql(statement.right)}"
       }
@@ -85,7 +103,6 @@ object SqlUtil {
       is ExValueVar -> value.name
       is ExValueLit -> {
         when (value.getType()) {
-          // TODO: Handle `null` as a possible value (for string at least... also date/time, number, boolean?)
           ExDataType.STRING -> "'${value.value.toString().replace("'", "''")}'"
           ExDataType.NUMBER -> value.value.toString()
           ExDataType.REGEX -> throw IllegalArgumentException("regex value can only be used with =~")
