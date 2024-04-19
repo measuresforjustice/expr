@@ -207,7 +207,22 @@ class SqlUtilTest {
     "NOT (NOT (aNumber < 10))"
   )
 
-  // TODO math statements
+  // ----- math statements -----
+
+  @Test
+  fun testAddStatement() = test(
+    "aNumber+3=anotherNumber",
+    model.plus(mapOf("anotherNumber" to ExDataType.NUMBER)),
+    "aNumber + 3 = anotherNumber"
+  )
+
+  @Test
+  fun testSubtractStatement() = test(
+    "5 - aNumber>=anotherNumber",
+    model.plus(mapOf("anotherNumber" to ExDataType.NUMBER)),
+    "5 - aNumber >= anotherNumber"
+  )
+
   // TODO nulls (looks like they can be used with equal, not equal, and in/contains)
   // TODO complex nested expression with parens, not, multiple operators, etc.
   // TODO operand type validity checks
