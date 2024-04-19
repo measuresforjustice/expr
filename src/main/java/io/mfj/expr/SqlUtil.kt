@@ -32,8 +32,9 @@ object SqlUtil {
 
   private fun toSql(statement: ExprLogicStatement): String {
     return when (statement.op) {
-      // TODO: Validate that operands are of the correct types for each operator (see ExprLogicStatement.calc)
       ExLogicOpType.REGEX_MATCH -> {
+        if (statement.left.getType() != ExDataType.STRING)
+          throw IllegalArgumentException( "Regex input must be a String, not ${statement.left.getType()}" )
         val literal = (statement.right as? ExValueLit)?.value
             ?: throw IllegalArgumentException("Regex pattern must be a simple literal")
         val regex = if (literal is Regex) literal else Regex(literal.toString())

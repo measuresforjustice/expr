@@ -260,6 +260,42 @@ class SqlUtilTest {
     "aDate IS NULL"
   )
 
-  // TODO operand type validity checks
+  // ----- operand type validity checks -----
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testRegexAgainstDate() = test(
+    "aDate =~ /a.b/",
+    model,
+    "aDate ~ 'a.b'" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testRegexAgainstBoolean() = test(
+    "aBoolean =~ /a.b/",
+    model,
+    "aBoolean ~ 'a.b'" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testRegexAgainstNumber() = test(
+    "aNumber =~ /a.b/",
+    model,
+    "aNumber ~ 'a.b'" // INVALID
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testRegexLiteralWithWrongOperator() = test(
+    "aString < /a.b/",
+    model,
+    "aString < 'a.b'" // NOT WHAT WE INTENDED
+  )
+
+  @Test(expected=IllegalArgumentException::class)
+  fun testRegexOperatorWithNonLiteral() = test(
+    "aString =~ anotherString",
+    model.plus(mapOf("anotherString" to ExDataType.STRING)),
+    "aString ~ anotherString" // INVALID
+  )
+
   // TODO a big complex nested expression with parens, not, multiple operators, etc.
 }
