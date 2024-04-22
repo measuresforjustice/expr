@@ -373,6 +373,23 @@ class SqlUtilTest {
     model,
     "aString NOT IN ('foo', NULL, 'bar')", // INVALID
   )
-  
-  // TODO a big complex nested expression with parens, not, multiple operators, etc.
+
+  // ----- combine a bunch of things -----
+
+  @Test
+  fun testCombo() = test(
+    """
+      not ((aNumber = 1 or aNumber > 5)) and
+      (aString = "foo" or aString =~ "^bar+" and aString !in ["bar1", "bar2"]) and
+      aBoolean = true and
+      aDate != null and aDate < d'2020-01-01'
+    """.trimIndent(),
+    model,
+    """
+      (NOT ((aNumber = 1 OR aNumber > 5)) AND
+      ((aString = 'foo' OR (aString ~ '^bar+' AND aString NOT IN ('bar1', 'bar2'))) AND
+      (aBoolean = TRUE AND
+      (aDate IS NOT NULL AND aDate < '2020-01-01'))))
+    """.trimIndent().replace("\n", " ")
+  )
 }
