@@ -51,28 +51,28 @@ object PostgresAdapter {
         "${toSql(statement.left)} ~ '${regex.pattern}'"
       }
       ExLogicOpType.IN -> {
-        val rightList = ( statement.right as? ExValueList )
+        val rightList = (statement.right as? ExValueList)
             ?: throw IllegalArgumentException("right operand for ${ExLogicOpType.IN} must be a list")
         validateListElements(rightList.values)
         val joinedList = rightList.values.joinToString { toSql(it) }
         "${toSql(statement.left)} IN ($joinedList)"
       }
       ExLogicOpType.NOT_IN -> {
-        val rightList = ( statement.right as? ExValueList )
+        val rightList = (statement.right as? ExValueList)
           ?: throw IllegalArgumentException("right operand for ${ExLogicOpType.IN} must be a list")
         validateListElements(rightList.values)
         val joinedList = rightList.values.joinToString { toSql(it) }
         "${toSql(statement.left)} NOT IN ($joinedList)"
       }
       ExLogicOpType.CONTAINS -> {
-        val leftList = ( statement.left as? ExValueList )
+        val leftList = (statement.left as? ExValueList)
           ?: throw IllegalArgumentException("left operand for ${ExLogicOpType.CONTAINS} must be a list")
         validateListElements(leftList.values)
         val joinedList = leftList.values.joinToString { toSql(it) }
         "${toSql(statement.right)} IN ($joinedList)"
       }
       ExLogicOpType.NOT_CONTAINS -> {
-        val leftList = ( statement.left as? ExValueList )
+        val leftList = (statement.left as? ExValueList)
           ?: throw IllegalArgumentException("left operand for ${ExLogicOpType.CONTAINS} must be a list")
         validateListElements(leftList.values)
         val joinedList = leftList.values.joinToString { toSql(it) }
@@ -156,11 +156,11 @@ object PostgresAdapter {
     }
 
     if (!setOf(
-      ExDataType.STRING,
-      ExDataType.NUMBER,
-      ExDataType.DATE,
-      ExDataType.TIME,
-      ExDataType.DATETIME
+        ExDataType.STRING,
+        ExDataType.NUMBER,
+        ExDataType.DATE,
+        ExDataType.TIME,
+        ExDataType.DATETIME
     ).contains(left.getType())) {
       throw IllegalArgumentException("operands for greater/less than must be string, number or date/time")
     }
