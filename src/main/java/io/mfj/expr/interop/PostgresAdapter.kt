@@ -1,11 +1,12 @@
-package io.mfj.expr
+package io.mfj.expr.interop
 
+import io.mfj.expr.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-object SqlUtil {
+object PostgresAdapter {
   /**
    * Serialize `trustedExpr` into a Postgres-compatible
    * SQL expression string (e.g. for use in a WHERE clause)

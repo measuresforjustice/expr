@@ -1,9 +1,12 @@
-package io.mfj.expr
+package io.mfj.expr.interop
 
+import io.mfj.expr.ExDataType
+import io.mfj.expr.ExprParser
+import io.mfj.expr.MapVarTypeProvider
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class SqlUtilTest {
+class PostgresAdapterTest {
   private val model = mapOf(
       "aString" to ExDataType.STRING,
       "aNumber" to ExDataType.NUMBER,
@@ -14,11 +17,11 @@ class SqlUtilTest {
   )
 
   fun test(exprStr: String,
-           model: Map<String,ExDataType>,
+           model: Map<String, ExDataType>,
            expected: String
   ) {
     val expr = ExprParser.parseToExpr(exprStr, MapVarTypeProvider(model))
-    val sql = SqlUtil.toSqlExpression(expr)
+    val sql = PostgresAdapter.toSqlExpression(expr)
     assertEquals(expected, sql)
   }
 
