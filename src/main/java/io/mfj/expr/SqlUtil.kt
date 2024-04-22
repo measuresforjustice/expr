@@ -6,11 +6,19 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 object SqlUtil {
-  fun toSqlExpression(expr:Expr): String {
-    return when (expr) {
-      is ExprConjunction -> toSql(expr)
-      is ExprLogicStatement -> toSql(expr)
-      else -> error("Unexpected type ${expr.javaClass}")
+  /**
+   * Serialize `trustedExpr` into a Postgres-compatible
+   * SQL expression string (e.g. for use in a WHERE clause)
+   *
+   * Input expression is NOT sanitized - do not use with
+   * expressions from untrusted sources, to avoid a SQL
+   * injection vector
+   */
+  fun toSqlExpression(trustedExpr: Expr): String {
+    return when (trustedExpr) {
+      is ExprConjunction -> toSql(trustedExpr)
+      is ExprLogicStatement -> toSql(trustedExpr)
+      else -> error("Unexpected type ${trustedExpr.javaClass}")
     }
   }
 
