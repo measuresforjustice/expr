@@ -360,7 +360,19 @@ class SqlUtilTest {
     "aBoolean <= FALSE" // INVALID
   )
 
-  // TODO including a null literal in a list (i.e. for IN / NOT IN) should throw - NULL is not a value in SQL
+  @Test(expected=IllegalArgumentException::class)
+  fun testNullWithIn() = test(
+    "aString IN [\"foo\", null, \"bar\"]",
+    model,
+    "aString IN ('foo', NULL, 'bar')", // INVALID
+  )
 
+  @Test(expected=IllegalArgumentException::class)
+  fun testNullWithContains() = test(
+    "[\"foo\", null, \"bar\"] !contains aString",
+    model,
+    "aString NOT IN ('foo', NULL, 'bar')", // INVALID
+  )
+  
   // TODO a big complex nested expression with parens, not, multiple operators, etc.
 }
