@@ -159,7 +159,7 @@ object ExprParser {
 				return ExList(
 						ctx.children
 								.drop(1).dropLast(1) // remove '[', ']'
-								.filterIndexed { i, child -> i % 2 == 0 } // omit commas
+								.filterIndexed { i, _ -> i % 2 == 0 } // omit commas
 								.map { child ->
 									child.v() as ExVal
 								}
