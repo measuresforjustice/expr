@@ -1,0 +1,8 @@
+# This is the CODEOWNERS file for the expr repo.
+
+# These owners will be the default owners for everything in the repo, unless a
+# later match takes precedence.
+*   @wstumbo-mfj
+
+# Make sure that DevOps is aware of anything GitHub related
+/.github/    @wstumbo-mfj @SB-MFJ @meghanbissonnette-mfj
