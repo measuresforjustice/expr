@@ -2,7 +2,7 @@
 
 # These owners will be the default owners for everything in the repo, unless a
 # later match takes precedence.
-*   @wstumbo-mfj @agreenawaltMFJ
+*   @wstumbo-mfj @agreenawaltMFJ @rbell-mfj
 
 # Make sure that DevOps is aware of anything GitHub related
 /.github/    @wstumbo-mfj @SB-MFJ @meghanbissonnette-mfj
