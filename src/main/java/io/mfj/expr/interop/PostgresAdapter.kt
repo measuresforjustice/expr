@@ -146,7 +146,36 @@ object PostgresAdapter {
       is ExValueCompound -> {
         "${toSql(value.left, subVars)} ${value.op.symbol} ${toSql(value.right, subVars)}"
       }
-      is ExValueVar -> value.name
+      is ExValueVar -> if (value.name in subVars) {
+        val subValue = subVars[value.name]
+        when (value.getType()) {
+          ExDataType.STRING -> "'${subValue.toString().replace("'", "''")}'"
+          ExDataType.NUMBER -> subValue.toString()
+          ExDataType.REGEX -> throw IllegalArgumentException("regex value is not supported in value substitutions")
+          ExDataType.DATE -> {
+            val dt = subValue as? LocalDate
+              ?: throw IllegalArgumentException("invalid type ${subValue?.javaClass} for DATE value")
+            val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            "'${dt.format(fmt)}'"
+          }
+          ExDataType.TIME -> {
+            val tm = subValue as? LocalTime
+              ?: throw IllegalArgumentException("invalid type ${subValue?.javaClass} for TIME value")
+            val fmt = DateTimeFormatter.ofPattern("HH:mm:ss")
+            "'${tm.format(fmt)}'"
+          }
+          ExDataType.DATETIME -> {
+            val dtTm = subValue as? LocalDateTime
+              ?: throw IllegalArgumentException("invalid type ${subValue?.javaClass} for TIME value")
+            val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            "'${dtTm.format(fmt)}'"
+          }
+          ExDataType.BOOLEAN -> subValue.toString().uppercase()
+          ExDataType.LIST -> throw IllegalArgumentException("list value is not supported in value substitutions")
+        }
+      } else {
+        value.name
+      }
       is ExValueLit -> {
         when (value.getType()) {
           ExDataType.STRING -> "'${value.value.toString().replace("'", "''")}'"

@@ -437,7 +437,7 @@ class PostgresAdapterTest {
     testSubstitution(
       "aNumber = subNumber",
       mapOf("subNumber" to 123),
-      """aNumber = 123""""
+      """aNumber = 123"""
     )
   }
 
@@ -446,7 +446,7 @@ class PostgresAdapterTest {
     testSubstitution(
       "aBoolean = subBoolean",
       mapOf("subBoolean" to true),
-      """aBoolean = TRUE""""
+      """aBoolean = TRUE"""
     )
   }
 
@@ -455,7 +455,7 @@ class PostgresAdapterTest {
     testSubstitution(
       "aDate = subDate",
       mapOf("subDate" to LocalDate.parse("2026-01-01")),
-      """aDate = '2026-01-01'"""""
+      """aDate = '2026-01-01'"""
     )
   }
 
@@ -464,7 +464,7 @@ class PostgresAdapterTest {
     testSubstitution(
       "aTime = subTime",
       mapOf("subTime" to LocalTime.parse("20:22:33")),
-      """aTime = '20:22:33'"""""
+      """aTime = '20:22:33'"""
     )
   }
 
@@ -473,7 +473,7 @@ class PostgresAdapterTest {
     testSubstitution(
       "aDateTime = subDateTime",
       mapOf("subDateTime" to LocalDateTime.parse("2026-01-01T20:22:33")),
-      """aDateTime = '2026-01-01 20:22:33'"""""
+      """aDateTime = '2026-01-01 20:22:33'"""
     )
   }
 
