@@ -5,15 +5,18 @@ import io.mfj.expr.ExprParser
 import io.mfj.expr.MapVarTypeProvider
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 class PostgresAdapterTest {
   private val model = mapOf(
-      "aString" to ExDataType.STRING,
-      "aNumber" to ExDataType.NUMBER,
-      "aDate" to ExDataType.DATE,
-      "aTime" to ExDataType.TIME,
-      "aDateTime" to ExDataType.DATETIME,
-      "aBoolean" to ExDataType.BOOLEAN,
+    "aString" to ExDataType.STRING,
+    "aNumber" to ExDataType.NUMBER,
+    "aDate" to ExDataType.DATE,
+    "aTime" to ExDataType.TIME,
+    "aDateTime" to ExDataType.DATETIME,
+    "aBoolean" to ExDataType.BOOLEAN
   )
 
   fun test(exprStr: String,
@@ -395,4 +398,101 @@ class PostgresAdapterTest {
       (aDate IS NOT NULL AND aDate < '2020-01-01'))))
     """.trimIndent().replace("\n", " ")
   )
+
+  // ----- substitutions -----
+  private val subModel = mapOf(
+    "aString" to ExDataType.STRING,
+    "aNumber" to ExDataType.NUMBER,
+    "aDate" to ExDataType.DATE,
+    "aTime" to ExDataType.TIME,
+    "aDateTime" to ExDataType.DATETIME,
+    "aBoolean" to ExDataType.BOOLEAN,
+    "subString" to ExDataType.STRING,
+    "subNumber" to ExDataType.NUMBER,
+    "subDate" to ExDataType.DATE,
+    "subTime" to ExDataType.TIME,
+    "subDateTime" to ExDataType.DATETIME,
+    "subBoolean" to ExDataType.BOOLEAN,
+  )
+  fun testSubstitution(exprStr: String,
+                       substitutionVars: Map<String, Any>,
+                       expected: String
+  ) {
+    val expr = ExprParser.parseToExpr(exprStr, MapVarTypeProvider(subModel))
+    val sql = PostgresAdapter.toSqlExpression(expr, substitutionVars)
+    assertEquals(expected, sql)
+  }
+
+  @Test
+  fun testStringSubstitution() {
+    testSubstitution(
+      "aString = subString",
+      mapOf("subString" to "stringValue"),
+      """aString = 'stringValue'"""
+    )
+  }
+
+  @Test
+  fun testNumberSubstitution() {
+    testSubstitution(
+      "aNumber = subNumber",
+      mapOf("subNumber" to 123),
+      """aNumber = 123"""
+    )
+  }
+
+  @Test
+  fun testBooleanSubstitution() {
+    testSubstitution(
+      "aBoolean = subBoolean",
+      mapOf("subBoolean" to true),
+      """aBoolean = TRUE"""
+    )
+  }
+
+  @Test
+  fun testDateSubstitution() {
+    testSubstitution(
+      "aDate = subDate",
+      mapOf("subDate" to LocalDate.parse("2026-01-01")),
+      """aDate = '2026-01-01'"""
+    )
+  }
+
+  @Test
+  fun testTimeSubstitution() {
+    testSubstitution(
+      "aTime = subTime",
+      mapOf("subTime" to LocalTime.parse("20:22:33")),
+      """aTime = '20:22:33'"""
+    )
+  }
+
+  @Test
+  fun testDateTimeSubstitution() {
+    testSubstitution(
+      "aDateTime = subDateTime",
+      mapOf("subDateTime" to LocalDateTime.parse("2026-01-01T20:22:33")),
+      """aDateTime = '2026-01-01 20:22:33'"""
+    )
+  }
+
+  @Test
+  fun testComboSubstitutions() {
+    testSubstitution(
+      """
+        not ((aNumber = 1 or aNumber > subNumber)) and
+        (aString = subString or aString =~ "^bar+" and aString !in ["bar1", "bar2"]) and
+        aBoolean = subBoolean and
+        aDate != null and aDate < d'2020-01-01'
+      """.trimIndent(),
+      mapOf("subNumber" to 5, "subString" to "foo", "subBoolean" to true),
+      """
+        (NOT ((aNumber = 1 OR aNumber > 5)) AND
+        ((aString = 'foo' OR (aString ~ '^bar+' AND aString NOT IN ('bar1', 'bar2'))) AND
+        (aBoolean = TRUE AND
+        (aDate IS NOT NULL AND aDate < '2020-01-01'))))
+      """.trimIndent().replace("\n", " ")
+    )
+  }
 }

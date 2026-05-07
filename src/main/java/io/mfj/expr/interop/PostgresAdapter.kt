@@ -26,15 +26,34 @@ object PostgresAdapter {
    */
   fun toSqlExpression(trustedExpr: Expr): String {
     return when (trustedExpr) {
-      is ExprConjunction -> toSql(trustedExpr)
-      is ExprLogicStatement -> toSql(trustedExpr)
+      is ExprConjunction -> toSql(trustedExpr, mapOf())
+      is ExprLogicStatement -> toSql(trustedExpr, mapOf())
       else -> error("Unexpected type ${trustedExpr.javaClass}")
     }
   }
 
-  private fun toSql(conjunction: ExprConjunction): String {
+  /**
+   * Serialize `trustedExpr` into a Postgres-compatible
+   * SQL expression string (e.g. for use in a WHERE clause).
+   *
+   * Additionally replace any encountered variables whose keys
+   * are in `trustedSubsitutionVars` with the mapped value.
+   *
+   * Input expression and substitution values are
+   * NOT sanitized - do not use with expressions from
+   * untrusted sources, to avoid a SQL injection vector
+   */
+  fun toSqlExpression(trustedExpr: Expr, trustedSubstitutionVars: Map<String, Any>): String {
+    return when (trustedExpr) {
+      is ExprConjunction -> toSql(trustedExpr, trustedSubstitutionVars)
+      is ExprLogicStatement -> toSql(trustedExpr, trustedSubstitutionVars)
+      else -> error("Unexpected type ${trustedExpr.javaClass}")
+    }
+  }
+
+  private fun toSql(conjunction: ExprConjunction, subVars: Map<String, Any>): String {
     return conjunction.params.joinToString(" ${conjunction.type.name} ") { expr ->
-      toSqlExpression(expr)
+      toSqlExpression(expr, subVars)
     }.let { joined ->
       if (conjunction.not) {
         "NOT ($joined)"
@@ -48,7 +67,7 @@ object PostgresAdapter {
     }
   }
 
-  private fun toSql(statement: ExprLogicStatement): String {
+  private fun toSql(statement: ExprLogicStatement, subVars: Map<String, Any>): String {
     return when (statement.op) {
       ExLogicOpType.REGEX_MATCH -> {
         if (statement.left.getType() != ExDataType.STRING)
@@ -57,52 +76,52 @@ object PostgresAdapter {
             ?: throw IllegalArgumentException("Regex pattern must be a simple literal")
         val regex = if (literal is Regex) literal else Regex(literal.toString())
         // the grammar doesn't seem to have any way to specify a case-insensitive regex
-        "${toSql(statement.left)} ~ '${regex.pattern}'"
+        "${toSql(statement.left, subVars)} ~ '${regex.pattern}'"
       }
       ExLogicOpType.IN -> {
         val rightList = (statement.right as? ExValueList)
             ?: throw IllegalArgumentException("right operand for ${ExLogicOpType.IN} must be a list")
         validateListElements(rightList.values)
-        val joinedList = rightList.values.joinToString { toSql(it) }
-        "${toSql(statement.left)} IN ($joinedList)"
+        val joinedList = rightList.values.joinToString { toSql(it, subVars) }
+        "${toSql(statement.left, subVars)} IN ($joinedList)"
       }
       ExLogicOpType.NOT_IN -> {
         val rightList = (statement.right as? ExValueList)
           ?: throw IllegalArgumentException("right operand for ${ExLogicOpType.IN} must be a list")
         validateListElements(rightList.values)
-        val joinedList = rightList.values.joinToString { toSql(it) }
-        "${toSql(statement.left)} NOT IN ($joinedList)"
+        val joinedList = rightList.values.joinToString { toSql(it, subVars) }
+        "${toSql(statement.left, subVars)} NOT IN ($joinedList)"
       }
       ExLogicOpType.CONTAINS -> {
         val leftList = (statement.left as? ExValueList)
           ?: throw IllegalArgumentException("left operand for ${ExLogicOpType.CONTAINS} must be a list")
         validateListElements(leftList.values)
-        val joinedList = leftList.values.joinToString { toSql(it) }
-        "${toSql(statement.right)} IN ($joinedList)"
+        val joinedList = leftList.values.joinToString { toSql(it, subVars) }
+        "${toSql(statement.right, subVars)} IN ($joinedList)"
       }
       ExLogicOpType.NOT_CONTAINS -> {
         val leftList = (statement.left as? ExValueList)
           ?: throw IllegalArgumentException("left operand for ${ExLogicOpType.CONTAINS} must be a list")
         validateListElements(leftList.values)
-        val joinedList = leftList.values.joinToString { toSql(it) }
-        "${toSql(statement.right)} NOT IN ($joinedList)"
+        val joinedList = leftList.values.joinToString { toSql(it, subVars) }
+        "${toSql(statement.right, subVars)} NOT IN ($joinedList)"
       }
       ExLogicOpType.EQUAL -> {
         if (statement.right is ExValueLit && statement.right.value == null) {
-          "${toSql(statement.left)} IS NULL"
+          "${toSql(statement.left, subVars)} IS NULL"
         } else if (statement.left is ExValueLit && statement.left.value == null) {
-          "${toSql(statement.right)} IS NULL"
+          "${toSql(statement.right, subVars)} IS NULL"
         } else {
-          "${toSql(statement.left)} = ${toSql(statement.right)}"
+          "${toSql(statement.left, subVars)} = ${toSql(statement.right, subVars)}"
         }
       }
       ExLogicOpType.NOT_EQUAL -> {
         if (statement.right is ExValueLit && statement.right.value == null) {
-          "${toSql(statement.left)} IS NOT NULL"
+          "${toSql(statement.left, subVars)} IS NOT NULL"
         } else if (statement.left is ExValueLit && statement.left.value == null) {
-          "${toSql(statement.right)} IS NOT NULL"
+          "${toSql(statement.right, subVars)} IS NOT NULL"
         } else {
-          "${toSql(statement.left)} <> ${toSql(statement.right)}"
+          "${toSql(statement.left, subVars)} <> ${toSql(statement.right, subVars)}"
         }
       }
       ExLogicOpType.GREATER,
@@ -110,7 +129,7 @@ object PostgresAdapter {
       ExLogicOpType.LESS,
       ExLogicOpType.LESS_EQUAL -> {
         validateGreaterOrLessOperands(statement.left, statement.right)
-        "${toSql(statement.left)} ${statement.op.symbol} ${toSql(statement.right)}"
+        "${toSql(statement.left, subVars)} ${statement.op.symbol} ${toSql(statement.right, subVars)}"
       }
     }.let { stmt ->
       if (statement.not) {
@@ -121,13 +140,42 @@ object PostgresAdapter {
     }
   }
 
-  private fun toSql(value: ExValue): String {
+  private fun toSql(value: ExValue, subVars: Map<String, Any>): String {
     return when (value) {
       is ExValueList -> throw IllegalArgumentException("list value can only be used with IN or CONTAINS")
       is ExValueCompound -> {
-        "${toSql(value.left)} ${value.op.symbol} ${toSql(value.right)}"
+        "${toSql(value.left, subVars)} ${value.op.symbol} ${toSql(value.right, subVars)}"
       }
-      is ExValueVar -> value.name
+      is ExValueVar -> if (value.name in subVars) {
+        val subValue = subVars[value.name]
+        when (value.getType()) {
+          ExDataType.STRING -> "'${subValue.toString().replace("'", "''")}'"
+          ExDataType.NUMBER -> subValue.toString()
+          ExDataType.REGEX -> throw IllegalArgumentException("regex value is not supported in value substitutions")
+          ExDataType.DATE -> {
+            val dt = subValue as? LocalDate
+              ?: throw IllegalArgumentException("invalid type ${subValue?.javaClass} for DATE value")
+            val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            "'${dt.format(fmt)}'"
+          }
+          ExDataType.TIME -> {
+            val tm = subValue as? LocalTime
+              ?: throw IllegalArgumentException("invalid type ${subValue?.javaClass} for TIME value")
+            val fmt = DateTimeFormatter.ofPattern("HH:mm:ss")
+            "'${tm.format(fmt)}'"
+          }
+          ExDataType.DATETIME -> {
+            val dtTm = subValue as? LocalDateTime
+              ?: throw IllegalArgumentException("invalid type ${subValue?.javaClass} for TIME value")
+            val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            "'${dtTm.format(fmt)}'"
+          }
+          ExDataType.BOOLEAN -> subValue.toString().uppercase()
+          ExDataType.LIST -> throw IllegalArgumentException("list value is not supported in value substitutions")
+        }
+      } else {
+        value.name
+      }
       is ExValueLit -> {
         when (value.getType()) {
           ExDataType.STRING -> "'${value.value.toString().replace("'", "''")}'"
