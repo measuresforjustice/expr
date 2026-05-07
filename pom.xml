@@ -4,11 +4,11 @@
 
   <groupId>io.mfj</groupId>
   <artifactId>expr</artifactId>
-  <version>6.2-SNAPSHOT</version>
+  <version>6.3-SNAPSHOT</version>
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>A handy expression parser.</description>
-  <url>https://measuresforjustice.org/opensource#expr</url>
+  <url>https://github.com/measuresforjustice/expr</url>
 
   <developers>
     <developer>
