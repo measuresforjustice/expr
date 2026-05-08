@@ -4,7 +4,7 @@
 
   <groupId>io.mfj</groupId>
   <artifactId>expr</artifactId>
-  <version>6.3-SNAPSHOT</version>
+  <version>6.3.44</version>
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>A handy expression parser.</description>
@@ -26,6 +26,12 @@
     </license>
   </licenses>
 
+  <scm>
+    <connection>scm:git:git://measuresforjustice/expr.git</connection>
+    <developerConnection>scm:git:ssh://github.com:measuresforjustice/expr.git</developerConnection>
+    <url>https://github.com/measuresforjustice/expr/tree/main</url>
+  </scm>
+
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
@@ -34,6 +40,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <antlr4.version>4.9.2</antlr4.version>
   </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>central</id>
+      <url>https://central.sonatype.com/api/v1/publisher/upload</url>
+    </repository>
+  </distributionManagement>
 
   <build>
     <plugins>
@@ -84,35 +97,6 @@
             <visitor>true</visitor>
             <outputDirectory>${project.build.directory}/generated-sources/antlr4/io/mfj/expr/antlr4/</outputDirectory>
           </configuration>
-      </plugin>
-      <plugin>
-        <!-- Needed for externally released (open sourced) projects -->
-        <groupId>org.jetbrains.dokka</groupId>
-        <artifactId>dokka-maven-plugin</artifactId>
-        <version>1.9.10</version>
-        <executions>
-          <execution>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>dokka</goal>
-              <goal>javadoc</goal>
-              <goal>javadocJar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -178,5 +162,76 @@
     </dependency>
 
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>nexusCentralDeploy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- Needed for externally released (open sourced) projects -->
+            <groupId>org.jetbrains.dokka</groupId>
+            <artifactId>dokka-maven-plugin</artifactId>
+            <version>2.2.0</version>
+            <executions>
+              <execution>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>dokka</goal>
+                  <goal>javadoc</goal>
+                  <goal>javadocJar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.4.0</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.8</version>
+            <configuration>
+              <keyname>${GPG_KEY_ID}</keyname>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.10.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+              <waitUntil>published</waitUntil>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
