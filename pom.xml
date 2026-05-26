@@ -4,7 +4,7 @@
 
   <groupId>io.mfj</groupId>
   <artifactId>expr</artifactId>
-  <version>6.3.44</version>
+  <version>6.3-SNAPSHOT</version>
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>A handy expression parser.</description>
